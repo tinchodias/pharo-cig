@@ -32,5 +32,7 @@ LibClang >> runner [
 { #category : 'accessing - platform' }
 LibClang >> unix64LibraryName [
 
-	^ FFIUnix64LibraryFinder findLibrary: 'libclang.so'
+	^ FFIUnix64LibraryFinder new
+		userPaths: #('/lib/x86_64-linux-gnu/');
+		findLibrary: 'libclang-14.so.1'
 ]
