@@ -46,7 +46,13 @@ CigVisitor >> visitAlias: anAlias [
 { #category : 'visiting' }
 CigVisitor >> visitAll: aCollection [
 
-	aCollection do: [ :each | 
+	aCollection do: [ :each |
+		each name isEmpty ifTrue: [
+			| freeName count |
+			freeName := each location asFileReference basenameWithoutExtension.
+			count := aCollection count: [ :each2 | each name beginsWith: freeName ].
+			freeName := freeName, count asString.
+			each name: freeName ].
 		each accept: self ]
 ]
 

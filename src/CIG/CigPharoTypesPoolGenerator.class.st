@@ -36,7 +36,7 @@ CigPharoTypesPoolGenerator >> classInitializationTemplate: aDictionary [
 
 	^ String streamContents: [ :stream |
 		stream << 'initialize'; cr; cr.
-		self cppTypes, aDictionary associations 
+		self cppTypes, aDictionary associations sorted
 			do: [ :assoc | 
 				stream tab.
 				stream 
