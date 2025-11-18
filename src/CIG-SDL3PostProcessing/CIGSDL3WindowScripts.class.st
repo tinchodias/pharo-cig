@@ -14,17 +14,17 @@ CIGSDL3WindowScripts >> initializeParameters [
 	theWord := 'window'.
 	excludedSelectors := #().
 	explicitRenames := {
-		'textInputActive'. 'isTextInputActive'.
-		'displayFor'. 'display'.
-		'iD'. 'id'.
-		'fullscreenMode'. 'isFullscreenMode'.
-		'keyboardGrab'. 'isKeyboardGrabbed'.
-		'mouseGrab'. 'isMouseGrabbed'.
-		'flashOperation:'. 'flashWithOperation:'.
-		'relativeMouseMode'. 'isRelativeMouseMode'.
-		'eglGetSurface'. 'eglSurface'.
-		'glCreateContext'. 'glNewContext'.
-		'screenKeyboardShown'. 'isScreenKeyboardShown'.
-		'newRendererName:'. 'newRendererFor:'.
-		}
+		'textInputActive' -> 'isTextInputActive'.
+		'displayFor' -> 'display'.
+		'iD' -> 'id'.
+		'fullscreenMode' -> 'isFullscreenMode'.
+		'keyboardGrab' -> 'isKeyboardGrabbed'.
+		'mouseGrab' -> 'isMouseGrabbed'.
+		'flashOperation:' -> 'flashWithOperation:'.
+		'relativeMouseMode' -> 'isRelativeMouseMode'.
+		'eglGetSurface' -> 'eglSurface'.
+		'glCreateContext' -> 'glNewContext'.
+		'screenKeyboardShown' -> 'isScreenKeyboardShown'.
+		'newRendererName:' -> 'newRendererFor:'.
+		} asOrderedDictionary
 ]

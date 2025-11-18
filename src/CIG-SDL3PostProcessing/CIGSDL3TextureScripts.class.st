@@ -14,6 +14,7 @@ CIGSDL3TextureScripts >> initializeParameters [
 	theWord := 'texture'.
 	excludedSelectors := #().
 	explicitRenames := {
-		'rendererFrom'. 'renderer'.
-		'scaleModeScaleMode:'. 'scaleMode:' }
+		'rendererFrom' -> 'renderer'.
+		'scaleModeScaleMode:' -> 'scaleMode:'
+		} asOrderedDictionary
 ]

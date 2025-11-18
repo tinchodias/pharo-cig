@@ -184,7 +184,13 @@ CIGSDL3Scripts >> initializeRenames [
 		" == Phase 3 == "
 
 		"Explicit renames"
-		explicitRenames pairsDo: [ :a :b | newSelector = a ifTrue: [ newSelector := b ] ].
+		explicitRenames
+			at: newSelector
+			ifPresent: [ :value |
+				explicitRenames removeKey: newSelector.
+				newSelector := value ].
 
 		method -> newSelector ].
+	
+	explicitRenames ifNotEmpty: [ explicitRenames inspectWithLabel: 'Remaining renames in ', self className ]
 ]

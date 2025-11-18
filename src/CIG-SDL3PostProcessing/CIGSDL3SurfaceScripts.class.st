@@ -14,9 +14,9 @@ CIGSDL3SurfaceScripts >> initializeParameters [
 	theWord := 'surface'.
 	excludedSelectors := #().
 	explicitRenames := { 
-		'rLEEnabled:'. 'isRLEEnabled:'.
-		'eglGetSurface'. 'eglSurface'.
-		'convertAndColorspaceFormat:palette:colorspace:props:'. 'copyWithFormat:palette:colorspace:props:'.
-		'convertFormat:'. 'copyWithFormat:'
-		}
+		'rLEEnabled:' -> 'isRLEEnabled:'.
+		'eglGetSurface' -> 'eglSurface'.
+		'convertAndColorspaceFormat:palette:colorspace:props:' -> 'copyWithFormat:palette:colorspace:props:'.
+		'convertFormat:' -> 'copyWithFormat:'
+		} asOrderedDictionary
 ]

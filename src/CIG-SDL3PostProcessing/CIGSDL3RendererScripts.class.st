@@ -14,18 +14,18 @@ CIGSDL3RendererScripts >> initializeParameters [
 	theWord := 'renderer'.
 	excludedSelectors := #(renderCoord renderFill renderGeom renderLine renderPoint renderRect renderTexture renderDebugText).
 	explicitRenames := {
-	 	'viewportSet'. 'isViewportSet'.
-		'clipEnabled'. 'isClipEnabled'.
-		'rendererName'. 'name'.
-		'rendererProperties'. 'properties'.
-		'targetTexture:'. 'target:'.
-		'viewportRect:'. 'viewport:'.
-		'newTextureWithPropertiesProps:'. 'newTextureWithProperties:'.
-		'renderCoordinatesFromWindowX:windowY:x:y:'. 'convertRenderCoordinatesFromWindowX:windowY:intoX:y:'.
-		'renderCoordinatesToWindowX:y:windowX:windowY:'. 'convertRenderCoordinatesToWindowX:y:intoWindowX:windowY:'.
-		'drawBlendModeBlendMode:'. 'blendMode:'.
-		'drawColorFloatR:g:b:a:'. 'colorFloatR:g:b:a:'.
-		'drawColorR:g:b:a:'. 'colorR:g:b:a:'.
-		'getScaleIntoX:scaleY:'. 'getScaleIntoX:y:'
-		}
+	 	'viewportSet' -> 'isViewportSet'.
+		'clipEnabled' -> 'isClipEnabled'.
+		'rendererName' -> 'name'.
+		'rendererProperties' -> 'properties'.
+		'targetTexture:' -> 'target:'.
+		'viewportRect:' -> 'viewport:'.
+		'newTextureWithPropertiesProps:' -> 'newTextureWithProperties:'.
+		'renderCoordinatesFromWindowX:windowY:x:y:' -> 'convertRenderCoordinatesFromWindowX:windowY:intoX:y:'.
+		'renderCoordinatesToWindowX:y:windowX:windowY:' -> 'convertRenderCoordinatesToWindowX:y:intoWindowX:windowY:'.
+		'drawBlendModeBlendMode:' -> 'blendMode:'.
+		'drawColorFloatR:g:b:a:' -> 'colorFloatR:g:b:a:'.
+		'drawColorR:g:b:a:' -> 'colorR:g:b:a:'.
+		'getScaleIntoX:scaleY:' -> 'getScaleIntoX:y:'
+		} asOrderedDictionary 
 ]
