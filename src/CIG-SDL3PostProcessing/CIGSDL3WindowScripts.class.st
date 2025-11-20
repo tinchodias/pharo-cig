@@ -8,7 +8,7 @@ Class {
 { #category : 'initialization' }
 CIGSDL3WindowScripts >> initializeParameters [
 
-	targetArgument := #(#SDL_Window #* #window).
+	targetArgument := #(#SDL_Window #*).
 	suffix := 'Window:'.
 	targetClass := self class environment classNamed: #SDL3Window.
 	theWord := 'window'.

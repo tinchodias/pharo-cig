@@ -8,14 +8,14 @@ Class {
 { #category : 'initialization' }
 CIGSDL3SurfaceScripts >> initializeParameters [
 
-	targetArgument := #(#SDL_Surface #* #surface).
+	targetArgument := #(#SDL_Surface #*).
 	suffix := 'Surface:'.
 	targetClass := self class environment classNamed: #SDL3Surface.
 	theWord := 'surface'.
-	excludedSelectors := #().
+	excludedSelectors :=  #(flipSurface:flip:).
 	explicitRenames := { 
+		'flipSurface:Flip:' -> 'flip:'.
 		'rLEEnabled:' -> 'isRLEEnabled:'.
-		'eglGetSurface' -> 'eglSurface'.
 		'convertAndColorspaceFormat:palette:colorspace:props:' -> 'copyWithFormat:palette:colorspace:props:'.
 		'convertFormat:' -> 'copyWithFormat:'
 		} asOrderedDictionary

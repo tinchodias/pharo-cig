@@ -6,10 +6,10 @@ Class {
 		'suffix',
 		'targetClass',
 		'explicitRenames',
-		'renames',
 		'theWord',
 		'excludedSelectors',
-		'ffiCallMethods'
+		'ffiCallMethods',
+		'methodsAndForwardingSelectors'
 	],
 	#category : 'CIG-SDL3PostProcessing',
 	#package : 'CIG-SDL3PostProcessing'
@@ -23,10 +23,20 @@ CIGSDL3Scripts class >> generateForwardingAPI [
 ]
 
 { #category : 'converting' }
+CIGSDL3Scripts class >> stdoutMarkdownTables [
+	<script>
+	
+	self subclassesDo: [ :each |
+		Stdio stdout
+			<< each name; lf;
+			<< each new asMarkdownTable; lf ]
+]
+
+{ #category : 'converting' }
 CIGSDL3Scripts >> asMarkdownTable [
 
 	^ String streamContents: [ :writeStream |
-		renames asOrderedDictionary keysAndValuesDo: [ :key :value |
+		methodsAndForwardingSelectors asOrderedDictionary keysAndValuesDo: [ :key :value |
 			writeStream << '| `'.
 			writeStream << key selector.
 			writeStream << '` | `#'.
@@ -36,16 +46,71 @@ CIGSDL3Scripts >> asMarkdownTable [
 		]
 ]
 
+{ #category : 'private' }
+CIGSDL3Scripts >> camelCasedWordsOf: aString [ 
+
+	| words word |
+	words := OrderedCollection new.
+	word := ''.
+
+	aString do: [ :char |
+		(char isUppercase and: [ word notEmpty and: [ word last isUppercase not ] ])
+			ifTrue: [
+				"End current word and start a new one"
+				| index |
+				index := word detectIndex: [ :e | e isLowercase ] ifNone: [ 2 ].
+				index <= 2
+					ifTrue: [
+						"Most common case: first or second char is lowercase"
+						words add: word ]
+					ifFalse: [
+						"Special case: word begins with an ACRONYM, and we split in in a separate word"
+						words
+							add: (word first: index - 2);
+							add: (word allButFirst: index - 2) ].
+				word := char asString ]
+			ifFalse: [
+				"Accumulate in current word"
+				word := word copyWith: char ] ].
+
+	"End last word"
+	word isEmpty ifFalse: [ words add: word ].
+	
+"	aString splitCamelCase."
+	^ words
+]
+
+{ #category : 'hooks' }
+CIGSDL3Scripts >> explicitPrefixRenames [
+
+	^ {
+		'gPU' -> 'gpu'
+		} asOrderedDictionary 
+]
+
+{ #category : 'initialization' }
+CIGSDL3Scripts >> forwardingSelectorFor: method [
+	
+	| keywords newSelector |
+"(method selector = #releaseGPUFenceDevice:fence:) ifTrue: [1halt]."
+
+	keywords := self phase1: method.
+	newSelector := self phase2: keywords.
+	newSelector := self phase3: newSelector.
+
+	^ newSelector
+]
+
 { #category : 'converting' }
 CIGSDL3Scripts >> generateForwardingAPI [
 	" == Generate forwarding API == "
 
-	| forwardingAPI header messageSend |
-
-	forwardingAPI := renames collect: [ :each |
-		self
-			assert: [ each key argumentNames first = targetArgument last ]
-			description: 'In SDL3 we can do this assumption on first argument'.
+	methodsAndForwardingSelectors do: [ :each |
+		| header messageSend sourceCode |
+"		self
+			assert: [ each key argumentNames first = theWord ]
+			description: 'In SDL3 we can do this assumption on first argument'."
+"		each key argumentNames first = theWord ifFalse: [ {self. each} inspect ]."
 
 		header := each key numArgs = 1
 			ifTrue: [ each value ]
@@ -57,15 +122,13 @@ CIGSDL3Scripts >> generateForwardingAPI [
 		messageSend := String streamContents: [ :stream |
 			each key selector keywords with: ({ 'self' }, each key argumentNames allButFirst)
 				do: [ :a :b | stream << a; space; << b; space ] ].
-		'{1}
+		sourceCode := '{1}
 			
 			^ self ffiLibrary {2}' format: {
 			header.
 			messageSend
-			} ].
-
-	forwardingAPI do: [ :each |
-		(targetClass >> (targetClass compile: each classified: #API)) reformat ]
+			}.
+		(targetClass >> (targetClass compile: sourceCode classified: #'* SDL3-API')) reformat ]
 ]
 
 { #category : 'initialization' }
@@ -75,12 +138,12 @@ CIGSDL3Scripts >> initialize [
 
 	self
 		initializeParameters;
-		initializeFFICallMethods;
-		initializeRenames
+		initializeCandidateAPI;
+		initializeForwardingSelectors
 ]
 
 { #category : 'initialization' }
-CIGSDL3Scripts >> initializeFFICallMethods [
+CIGSDL3Scripts >> initializeCandidateAPI [
 
 	"The methods that belong to the renderer have a renderer as first argument. This is a convention in SDL3."
 	ffiCallMethods := (LibSDL3 methods
@@ -102,95 +165,115 @@ CIGSDL3Scripts >> initializeFFICallMethods [
 ]
 
 { #category : 'initialization' }
+CIGSDL3Scripts >> initializeForwardingSelectors [
+
+	methodsAndForwardingSelectors := ffiCallMethods
+		collect: [ :method | method -> (self forwardingSelectorFor: method) ].
+
+	"If not empty, probably the remaining requires a manual update"
+	explicitRenames ifNotEmpty: [
+		explicitRenames inspectWithLabel: 'Remaining renames in ', self className ]
+]
+
+{ #category : 'initialization' }
 CIGSDL3Scripts >> initializeParameters [
 
 	self subclassResponsibility
 ]
 
-{ #category : 'initialization' }
-CIGSDL3Scripts >> initializeRenames [
+{ #category : 'as yet unclassified' }
+CIGSDL3Scripts >> phase1: method [
 
-	renames := ffiCallMethods collect: [ :method |
-		| keywords newFirstKeyword newKeywords words signature newSelector |
-		signature := method literals detect: [ :each | each isArray ].
-		keywords := method selector keywords.
+	| keywords newFirstKeyword wordsInFirstKeyword |
+	keywords := method selector keywords.
 
-		"We assume first argument is the renderer, but CIG doesn't explicit it in
-		the keyword when it is the only argument"
-		newFirstKeyword := (keywords first endsWith: suffix)
-			ifTrue: [ (keywords first allButLast: suffix size) "remove whole suffix" ]
-			ifFalse: [ keywords first allButLast: 1 "just remove colons" ].
+	"We assume first argument is my entity, e.g. renderer, 
+	but CIG doesn't explicit it in the keyword when it is the only argument."
+	newFirstKeyword := (keywords first endsWith: suffix)
+		ifTrue: [ keywords first allButLast: suffix size "remove whole suffix" ]
+		ifFalse: [ keywords first allButLast: 1 "just remove colons" ].
 
+	"Prepare to do renames based on selector's first word"
+	wordsInFirstKeyword := self camelCasedWordsOf: newFirstKeyword.
 
-		" == Phase 1 == "
+	" -- Only keep my entity name in certain cases -- "
+	(excludedSelectors noneSatisfy: [ :each | method selector beginsWith: each ]) ifTrue: [ 
+		| firstArgument |
+		wordsInFirstKeyword removeAllSuchThat: [ :word | word asLowercase = theWord ].
+		newFirstKeyword := ('' join: wordsInFirstKeyword) uncapitalized.
+		(keywords size > 1 and: [
+			firstArgument := keywords second withoutSuffix: ':'.
+			(newFirstKeyword asLowercase endsWith: firstArgument asLowercase) ]) ifTrue: [
+				newFirstKeyword := newFirstKeyword allButLast: firstArgument size ].
+		keywords := { newFirstKeyword }, keywords allButFirst ].
 
-		"Prepare to do renames based on selector's first word"
-		words := OrderedCollection streamContents: [ :stream |
-			| word |
-			word := ''.
-			newFirstKeyword do: [ :char |
-				(char isUppercase and: [ word notEmpty and: [ word last isUppercase not ] ])
-					ifTrue: [ stream nextPut: word. word := char asString ]
-					ifFalse: [ word := word copyWith: char ] ].
-			word isEmpty ifFalse: [ stream nextPut: word ] ].
+	" -- get* -- "
+	wordsInFirstKeyword first = 'get' ifTrue: [
+		| tail |
+		newFirstKeyword := keywords size = 1
+			ifTrue: [ '' join: { wordsInFirstKeyword second uncapitalized }, (wordsInFirstKeyword allButFirst: 2) ]
+			ifFalse: [ '' join: (wordsInFirstKeyword, #('Into')) ].
+		tail := (keywords size > 1 and: [
+				keywords second asLowercase beginsWith: wordsInFirstKeyword last asLowercase ]) 
+			ifFalse: [ keywords allButFirst ]
+			ifTrue: [
+				"Tackle an annoying word repetition"
+				{ keywords second allButFirst: wordsInFirstKeyword last size }, (keywords allButFirst: 2) ].
+		keywords := { newFirstKeyword }, tail ].
 
-		" -- Only keep *surface* in certain cases that are rendering operations -- "
-		(excludedSelectors
-			noneSatisfy: [ :each | method selector beginsWith: each ]) ifTrue: [ 
-				words removeAllSuchThat: [ :word | word asLowercase = theWord ].
-				newFirstKeyword := ('' join: words) uncapitalized.
-				keywords := { newFirstKeyword }, keywords allButFirst ].
+	" -- *set* -- "
+	wordsInFirstKeyword first = 'set' ifTrue: [
+		newFirstKeyword := '' join: ({ wordsInFirstKeyword second uncapitalized }, (wordsInFirstKeyword allButFirst: 2)).
+		keywords := { newFirstKeyword }, keywords allButFirst ].
 
-		" -- get* -- "
-		words first = 'get' ifTrue: [
-			| tail |
-			newFirstKeyword := keywords size = 1
-				ifTrue: [ '' join: { words second uncapitalized }, (words allButFirst: 2) ]
-				ifFalse: [ '' join: (words, #('Into')) ].
-			tail := (keywords size > 1 and: [
-					keywords second asLowercase beginsWith: words last asLowercase ]) 
-				ifFalse: [ keywords allButFirst ]
-				ifTrue: [
-					"Tackle an annoying word repetition"
-					{ keywords second allButFirst: words last size }, (keywords allButFirst: 2) ].
-			keywords := { newFirstKeyword }, tail ].
+	
+	^ keywords
+]
 
-		" -- *set* -- "
-		words first = 'set' ifTrue: [
-	"	(words size > 1 and: [ (words first: 2) asArray = #('set' 'Render') ]) ifTrue: ["
-			newFirstKeyword := '' join: ({ words second uncapitalized }, (words allButFirst: 2)).
-			keywords := { newFirstKeyword }, keywords allButFirst ].
+{ #category : 'as yet unclassified' }
+CIGSDL3Scripts >> phase2: input [
 
+	| keywords newFirstKeyword wordsInFirstKeyword |
+	keywords := input.
 
+	newFirstKeyword := keywords first.
+	wordsInFirstKeyword := self camelCasedWordsOf: newFirstKeyword.
 
-		" == Phase 2 == "
-
-		"May merge first and second keywords"
-		newKeywords := keywords size = 1
+	"May merge first and second keywords"
+	keywords :=
+		keywords size = 1
 			ifTrue: [ { newFirstKeyword } ]
 			ifFalse: [
 				"Tackle an annoying word repetition"
-				(keywords second beginsWith: words last asLowercase)
+				(keywords second beginsWith: wordsInFirstKeyword last asLowercase)
 					ifTrue: [
-						newFirstKeyword size = words last size
+						newFirstKeyword asLowercase = wordsInFirstKeyword last asLowercase
 							ifTrue: [ { keywords second uncapitalized }, keywords allButFirst: 2 ]
 							ifFalse: [
-								{ newFirstKeyword allButLast: words last size. keywords second capitalized }, (keywords allButFirst: 2)] ]
-					ifFalse: [ { newFirstKeyword, keywords second capitalized }, (keywords allButFirst: 2) ]
-				].
-		newSelector := '' join: newKeywords.
-
-
-		" == Phase 3 == "
-
-		"Explicit renames"
-		explicitRenames
-			at: newSelector
-			ifPresent: [ :value |
-				explicitRenames removeKey: newSelector.
-				newSelector := value ].
-
-		method -> newSelector ].
+								{ newFirstKeyword allButLast: wordsInFirstKeyword last size. keywords second capitalized }, (keywords allButFirst: 2) ] ]
+					ifFalse: [
+						{ newFirstKeyword, keywords second capitalized }, (keywords allButFirst: 2) ] ].
 	
-	explicitRenames ifNotEmpty: [ explicitRenames inspectWithLabel: 'Remaining renames in ', self className ]
+	^ '' join: keywords
+]
+
+{ #category : 'initialization' }
+CIGSDL3Scripts >> phase3: input [
+
+	| newSelector |
+	newSelector := input.
+	
+	"Explicit renames"
+	explicitRenames
+		at: newSelector
+		ifPresent: [ :value |
+			explicitRenames removeKey: newSelector.
+			newSelector := value ].
+
+	"More generic"
+	self explicitPrefixRenames keysAndValuesDo: [ :eachPrefix :eachReplacement |
+		(newSelector beginsWith: eachPrefix) ifTrue: [
+			newSelector := eachReplacement, (newSelector allButFirst: eachPrefix size) ] ].
+
+	^ newSelector
 ]

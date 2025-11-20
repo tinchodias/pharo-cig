@@ -8,7 +8,7 @@ Class {
 { #category : 'initialization' }
 CIGSDL3TextureScripts >> initializeParameters [
 
-	targetArgument := #(#SDL_Texture #* #texture).
+	targetArgument := #(#SDL_Texture #*).
 	suffix := 'Texture:'.
 	targetClass := self class environment classNamed: #SDL3Texture.
 	theWord := 'texture'.
