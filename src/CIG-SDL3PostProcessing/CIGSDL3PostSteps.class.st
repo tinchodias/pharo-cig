@@ -7,18 +7,31 @@ Class {
 }
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> apply [
+CIGSDL3PostSteps class >> step0Override [
 
-	self step1InitializeAndRebuild.
-	self step2Enums.
-	self step3Structs.
-	self step4AddIntermediateEvents.
-	self step5DeleteUnneededEventsAPI.
-	self step6FixBool
+	CIGSDL3Override applyOnAllSubclasses
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step100AddGitRepo [
+
+	| remote repository |
+	remote := IceGitRemote url: 'https://github.com/pharo-graphics/PharoSDL3.git'.
+	repository :=
+		IceRepositoryCreator new
+			name: 'PharoSDL3';
+			remote: remote;
+			location: 'src' asFileReference;
+			createRepository.
+	repository register; fetch
 ]
 
 { #category : 'steps' }
 CIGSDL3PostSteps class >> step1InitializeAndRebuild [
+
+	"The used version of CIG generates the typedef's #initialize in a wrong order, which produces an error on #generate during the initialization of structures. We manually sorted the lines of typedef's #initialize to make it work.
+	Changes in the SDL codebase may require rewriting it. In that case, you must adapt an existing version of `CIGSDL3SDL3Typedef>>#_initialize` in this package."
+	SDL3Typedef initialize.
 
 	"Re-try struct initialization. The result should be empty:"
 	Array streamContents: [ :stream |
@@ -160,4 +173,22 @@ CIGSDL3PostSteps class >> step6FixBool [
 		permutation: #(  );
 		renameChanges) execute.
 	LibSDL3 removeSelector: #bool
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step7AddMappedEvent [
+
+	"Create S3SDLMappedEvent and make all events subclass of it with:"
+	| structClass mappedEventClass evts |
+	structClass := self environment at: 'SDL3Structure' asSymbol.
+	mappedEventClass :=
+		(structClass << #SDL3MappedEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+
+	evts := structClass subclasses
+		select: [ :each | each name endsWith: 'Event' ].
+	evts := evts copyWithout: mappedEventClass.
+	evts do: [ :e | e superclass: mappedEventClass ]
 ]

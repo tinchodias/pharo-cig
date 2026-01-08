@@ -6,17 +6,6 @@ Class {
 }
 
 { #category : 'steps' }
-CIGSDL3PreSteps class >> apply [
-
-	self step1Generate.
-	self step2RemoveTrash.
-	self step3AddMappedEvent.
-	self step4PatchRBMethod.
-	self step5RenameAPI.
-	self step6RenameClasses
-]
-
-{ #category : 'steps' }
 CIGSDL3PreSteps class >> step1Generate [
 
 	| lib |
@@ -115,29 +104,12 @@ CIGSDL3PreSteps class >> step1Generate [
 { #category : 'steps' }
 CIGSDL3PreSteps class >> step2RemoveTrash [
 
-	(#S3SDL_DUMMY_ENUM asClassInEnvironment: self environment) removeFromSystem.
-	(#S3SDL_alignment_test asClassInEnvironment: self environment) removeFromSystem.
+	('S3SDL_DUMMY_ENUM' asClassInEnvironment: self environment) removeFromSystem.
+	('S3SDL_alignment_test' asClassInEnvironment: self environment) removeFromSystem.
 
-	((#S3BaseObject asClassInEnvironment: self environment) allSubclasses,
-	(#S3Structure asClassInEnvironment: self environment) allSubclasses)
-		select: [ :each | each name endsWith: '0' ] thenDo: #removeFromSystem
-]
-
-{ #category : 'steps' }
-CIGSDL3PreSteps class >> step3AddMappedEvent [
-
-	"Create S3SDLMappedEvent and make all events subclass of it with:"
-	| c evts |
-	c :=
-		((self environment at: #S3Structure) << #S3SDLMappedEvent
-			slots: {};
-			tag: 'Own';
-			package: 'SDL3') install.
-
-	evts := (self environment at: #S3Structure) subclasses
-		select: [ :each | each name endsWith: 'Event' ].
-	evts := evts copyWithout: c.
-	evts do: [ :e | e superclass: c ].
+	(('S3BaseObject' asClassInEnvironment: self environment) allSubclasses,
+	 ('S3Structure'  asClassInEnvironment: self environment) allSubclasses)
+			select: [ :each | each name endsWith: '0' ] thenDo: #removeFromSystem
 ]
 
 { #category : 'steps' }
@@ -200,6 +172,8 @@ CIGSDL3PreSteps class >> step5RenameAPI [
 	"Make first letter lowercase"
 	renames withIndexDo: [ :assoc :index |
 		| newSelector |
+		assoc traceCr.
+
 		newSelector := assoc value.
 		newSelector at: 1 put: (newSelector first asLowercase).
 		renames
@@ -250,6 +224,7 @@ CIGSDL3PreSteps class >> step6RenameClasses [
 					each -> newName ].
 
 		renames do: [ :each |
+			each traceCr.
 			(ReRenameClassRefactoring rename: each key name to: each value) execute ]	
 		]
 ]
