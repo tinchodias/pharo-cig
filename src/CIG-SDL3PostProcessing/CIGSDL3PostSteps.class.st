@@ -137,6 +137,8 @@ CIGSDL3PostSteps class >> step4bSDL3WindowIDEvent [
 			tag: 'Own';
 			package: 'SDL3') install.
 
+	SDL3MouseEvent superclass: eventClass.
+
 	SDL3MappedEvent subclasses
 		select: [ :each | each includesSelector: #windowID ]
 		thenDo: [ :each | each superclass: eventClass ]
