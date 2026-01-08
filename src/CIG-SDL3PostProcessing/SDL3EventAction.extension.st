@@ -1,7 +1,7 @@
-Extension { #name : 'S3SDL_EventAction' }
+Extension { #name : 'SDL3EventAction' }
 
-{ #category : '*SDL3-Own' }
-S3SDL_EventAction classSide >> enumDeclToCamelCaseDictionary [
+{ #category : '*CIG-SDL3PostProcessing' }
+SDL3EventAction class >> enumDeclToCamelCaseDictionary [
 
 	^ super enumDeclToCamelCaseDictionary
 		add: #SDL_ADDEVENT -> 'addEvent';

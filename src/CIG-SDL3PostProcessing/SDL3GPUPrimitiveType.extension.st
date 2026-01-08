@@ -1,7 +1,7 @@
-Extension { #name : 'S3SDL_GPUPrimitiveType' }
+Extension { #name : 'SDL3GPUPrimitiveType' }
 
-{ #category : '*SDL3-Own' }
-S3SDL_GPUPrimitiveType classSide >> enumDeclToCamelCaseDictionary [
+{ #category : '*CIG-SDL3PostProcessing' }
+SDL3GPUPrimitiveType class >> enumDeclToCamelCaseDictionary [
 
 	^ super enumDeclToCamelCaseDictionary
 		at: #SDL_GPU_PRIMITIVETYPE_LINELIST put: #lineList;

@@ -1,14 +1,14 @@
 Extension { #name : 'S3Enumeration' }
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> allValues [
+S3Enumeration classSide >> allValues [
 
 	^ Array streamContents: [ :stream |
 		self allValuesDo: [ :each | stream nextPut: each ] ]
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> allValuesDo: aBlock [
+S3Enumeration classSide >> allValuesDo: aBlock [
 
 	self withAllSuperclassesDo: [ :eachClass |
 		eachClass = S3Enumeration
@@ -19,7 +19,7 @@ S3Enumeration class >> allValuesDo: aBlock [
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> enumDeclCommonPrefix [
+S3Enumeration classSide >> enumDeclCommonPrefix [
 
 	| shortestName names |
 	names := self enumDecl
@@ -35,7 +35,7 @@ S3Enumeration class >> enumDeclCommonPrefix [
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> enumDeclToCamelCaseAt: aName prefix: prefix [
+S3Enumeration classSide >> enumDeclToCamelCaseAt: aName prefix: prefix [
 
 	| newName |
 	newName := aName withoutPrefix: prefix.
@@ -55,7 +55,7 @@ S3Enumeration class >> enumDeclToCamelCaseAt: aName prefix: prefix [
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> enumDeclToCamelCaseAt: aName prefix: prefix givenInvalidName: invalidName [
+S3Enumeration classSide >> enumDeclToCamelCaseAt: aName prefix: prefix givenInvalidName: invalidName [
 
 	invalidName first isDigit ifFalse: [ self error ].
 
@@ -63,7 +63,7 @@ S3Enumeration class >> enumDeclToCamelCaseAt: aName prefix: prefix givenInvalidN
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> enumDeclToCamelCaseDictionary [
+S3Enumeration classSide >> enumDeclToCamelCaseDictionary [
 
 	| prefix result |
 	"Must take another approach if there is only one pair"
@@ -81,7 +81,7 @@ S3Enumeration class >> enumDeclToCamelCaseDictionary [
 ]
 
 { #category : '*SDL3-Own' }
-S3Enumeration class >> initialize [
+S3Enumeration classSide >> initialize [
 	"We take the responsibility of initializing the whole hierarchy.
 	Why? To avoid duplication of initialize on each subclass.
 	However, we have to only initialize subclasses that define #enumDecl on classSide."

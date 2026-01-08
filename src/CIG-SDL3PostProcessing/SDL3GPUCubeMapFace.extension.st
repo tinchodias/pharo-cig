@@ -1,7 +1,7 @@
-Extension { #name : 'S3SDL_GPUCubeMapFace' }
+Extension { #name : 'SDL3GPUCubeMapFace' }
 
-{ #category : '*SDL3-Own' }
-S3SDL_GPUCubeMapFace classSide >> enumDeclToCamelCaseDictionary [
+{ #category : '*CIG-SDL3PostProcessing' }
+SDL3GPUCubeMapFace class >> enumDeclToCamelCaseDictionary [
 
 	^ super enumDeclToCamelCaseDictionary
 		add: #SDL_GPU_CUBEMAPFACE_POSITIVEX -> #positiveX;

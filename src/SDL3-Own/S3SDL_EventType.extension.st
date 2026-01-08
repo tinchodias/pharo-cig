@@ -1,7 +1,7 @@
 Extension { #name : 'S3SDL_EventType' }
 
 { #category : '*SDL3-Own' }
-S3SDL_EventType class >> enumDecl [
+S3SDL_EventType classSide >> enumDecl [
 	"Manually removed from generated code all *_FIRST and *_LAST, because they override real names.
 	
 	Steps to reproduce:

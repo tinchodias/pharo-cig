@@ -1,7 +1,7 @@
-Extension { #name : 'S3SDL_FileDialogType' }
+Extension { #name : 'SDL3FileDialogType' }
 
-{ #category : '*SDL3-Own' }
-S3SDL_FileDialogType classSide >> enumDeclToCamelCaseDictionary [
+{ #category : '*CIG-SDL3PostProcessing' }
+SDL3FileDialogType class >> enumDeclToCamelCaseDictionary [
 
 	^ super enumDeclToCamelCaseDictionary
 		at: #SDL_FILEDIALOG_OPENFILE put: #openFile;
