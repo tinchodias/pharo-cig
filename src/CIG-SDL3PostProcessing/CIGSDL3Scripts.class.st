@@ -11,8 +11,9 @@ Class {
 		'ffiCallMethods',
 		'methodsAndForwardingSelectors'
 	],
-	#category : 'CIG-SDL3PostProcessing',
-	#package : 'CIG-SDL3PostProcessing'
+	#category : 'CIG-SDL3PostProcessing-ForwardingAPI',
+	#package : 'CIG-SDL3PostProcessing',
+	#tag : 'ForwardingAPI'
 }
 
 { #category : 'converting' }

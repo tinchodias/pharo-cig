@@ -1,8 +1,9 @@
 Class {
 	#name : 'CIGSDL3Override',
 	#superclass : 'Object',
-	#category : 'CIG-SDL3PostProcessing',
-	#package : 'CIG-SDL3PostProcessing'
+	#category : 'CIG-SDL3PostProcessing-OverridingMethods',
+	#package : 'CIG-SDL3PostProcessing',
+	#tag : 'OverridingMethods'
 }
 
 { #category : 'private' }

@@ -425,8 +425,9 @@ Class {
 		'uintmax_t',
 		'uintptr_t'
 	],
-	#category : 'CIG-SDL3PostProcessing',
-	#package : 'CIG-SDL3PostProcessing'
+	#category : 'CIG-SDL3PostProcessing-OverridingMethods',
+	#package : 'CIG-SDL3PostProcessing',
+	#tag : 'OverridingMethods'
 }
 
 { #category : 'class initialization' }
