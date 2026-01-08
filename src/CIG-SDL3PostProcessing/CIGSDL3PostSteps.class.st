@@ -13,20 +13,6 @@ CIGSDL3PostSteps class >> step0Override [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step100AddGitRepo [
-
-	| remote repository |
-	remote := IceGitRemote url: 'https://github.com/pharo-graphics/PharoSDL3.git'.
-	repository :=
-		IceRepositoryCreator new
-			name: 'PharoSDL3';
-			remote: remote;
-			location: 'src' asFileReference;
-			createRepository.
-	repository register; fetch
-]
-
-{ #category : 'steps' }
 CIGSDL3PostSteps class >> step1InitializeAndRebuild [
 
 	"The used version of CIG generates the typedef's #initialize in a wrong order, which produces an error on #generate during the initialization of structures. We manually sorted the lines of typedef's #initialize to make it work.
@@ -65,6 +51,8 @@ CIGSDL3PostSteps class >> step2Enums [
 
 			allChanges := OrderedCollection new.
 			renames keysAndValuesDo: [ :oldName :newName |
+				(oldName -> newName) traceCr.
+
 				allChanges addAll: (ReRenameMethodRefactoring new
 			        model: model;
 			        renameMethod: oldName
@@ -105,6 +93,8 @@ CIGSDL3PostSteps class >> step3Structs [
 
 		allChanges := OrderedCollection new.
 		renames keysAndValuesDo: [ :oldName :newName |
+			(oldName -> newName) traceCr.
+
 			allChanges addAll: (ReRenameMethodRefactoring new
 		        model: model;
 		        renameMethod: oldName
@@ -122,9 +112,26 @@ CIGSDL3PostSteps class >> step3Structs [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step4AddIntermediateEvents [
+CIGSDL3PostSteps class >> step4aSDL3MappedEvent [
 
-	superclass :=
+	| eventClass evts |
+	eventClass :=
+		(SDL3Structure << #SDL3MappedEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+
+	evts := SDL3Structure subclasses
+		select: [ :each | each name endsWith: 'Event' ].
+	evts := evts copyWithout: eventClass.
+	evts do: [ :e | e superclass: eventClass ]
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step4bSDL3WindowIDEvent [
+
+	| eventClass |
+	eventClass :=
 		(SDL3MappedEvent << #SDL3WindowIDEvent
 			slots: {};
 			tag: 'Own';
@@ -132,10 +139,14 @@ CIGSDL3PostSteps class >> step4AddIntermediateEvents [
 
 	SDL3MappedEvent subclasses
 		select: [ :each | each includesSelector: #windowID ]
-		thenDo: [ :each | each superclass: superclass ].
+		thenDo: [ :each | each superclass: eventClass ]
+]
 
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step4cSDL3MouseEvent [
 
-	superclass :=
+	| eventClass |
+	eventClass :=
 		(SDL3MappedEvent << #SDL3MouseEvent
 			slots: {};
 			tag: 'Own';
@@ -146,7 +157,7 @@ CIGSDL3PostSteps class >> step4AddIntermediateEvents [
 			(each name includesSubstring: 'Mouse')
 			and: [ (each includesSelector: #which)
 			and: [ (each includesSelector: #x) ] ] ]
-		thenDo: [ :each | each superclass: superclass ]
+		thenDo: [ :each | each superclass: eventClass ]
 ]
 
 { #category : 'steps' }
@@ -162,33 +173,17 @@ CIGSDL3PostSteps class >> step5DeleteUnneededEventsAPI [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step6FixBool [
+CIGSDL3PostSteps class >> step99AddGitRepo [
 
-	LibSDL3 compile: '_Bool '.
-	(ReRenameMethodRefactoring new
-		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
-		renameMethod: #_Bool
-		in: LibSDL3
-		to: 'bool'
-		permutation: #(  );
-		renameChanges) execute.
-	LibSDL3 removeSelector: #bool
-]
-
-{ #category : 'steps' }
-CIGSDL3PostSteps class >> step7AddMappedEvent [
-
-	"Create S3SDLMappedEvent and make all events subclass of it with:"
-	| structClass mappedEventClass evts |
-	structClass := self environment at: 'SDL3Structure' asSymbol.
-	mappedEventClass :=
-		(structClass << #SDL3MappedEvent
-			slots: {};
-			tag: 'Own';
-			package: 'SDL3') install.
-
-	evts := structClass subclasses
-		select: [ :each | each name endsWith: 'Event' ].
-	evts := evts copyWithout: mappedEventClass.
-	evts do: [ :e | e superclass: mappedEventClass ]
+	| remote repository |
+	remote := IceGitRemote url: 'https://github.com/pharo-graphics/PharoSDL3.git'.
+	repository :=
+		IceRepositoryCreator new
+			remote: remote;
+			location: 'src' asFileReference;
+			createRepository.
+	repository
+		name: 'PharoSDL3';
+		register;
+		fetch
 ]

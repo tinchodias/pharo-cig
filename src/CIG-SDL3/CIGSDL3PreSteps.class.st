@@ -97,8 +97,7 @@ CIGSDL3PreSteps class >> step1Generate [
 
 
 	"Generation signals an error, but the main work is done anyway:"
-	lib generate
-
+	[ lib generate ] onErrorDo: [ :e | e traceCr ]
 ]
 
 { #category : 'steps' }
@@ -113,7 +112,8 @@ CIGSDL3PreSteps class >> step2RemoveTrash [
 ]
 
 { #category : 'steps' }
-CIGSDL3PreSteps class >> step4PatchRBMethod [
+CIGSDL3PreSteps class >> step3PatchRBMethod [
+	"Pharo 12 required this patch"
 
 	RBMethod compile: 'refersToSymbol: aSymbol
 
@@ -131,6 +131,20 @@ CIGSDL3PreSteps class >> step4PatchRBMethod [
 					, (self parseTreeSearcherClass buildSelectorString: aSymbol)
 				do: [ :node :answer | true ] ].
 		^ searcher executeTree: self parseTree initialAnswer: false'.
+]
+
+{ #category : 'as yet unclassified' }
+CIGSDL3PreSteps class >> step4FixBool [
+
+	LibSDL3 compile: '_Bool '.
+	(ReRenameMethodRefactoring new
+		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
+		renameMethod: #_Bool
+		in: LibSDL3
+		to: 'bool'
+		permutation: #(  );
+		renameChanges) execute.
+	LibSDL3 removeSelector: #bool
 ]
 
 { #category : 'steps' }
