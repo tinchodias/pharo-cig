@@ -175,6 +175,14 @@ CIGSDL3PostSteps class >> step5DeleteUnneededEventsAPI [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step6DeleteDispose [
+
+	SDL3BaseObject allSubclassesDo: [ :each | each removeSelector: #dispose ].
+	SDL3BaseObject compile: 'dispose
+	"Hook sent on finalization"' classified: #finalization
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step99AddGitRepo [
 
 	| remote repository |
