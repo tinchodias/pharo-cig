@@ -9,7 +9,7 @@ Class {
 		'excludedSelectors',
 		'ffiCallMethods',
 		'methodsAndForwardingSelectors',
-		'possibleSelectorSubstrings'
+		'firstKeywordSubstringsToRemove'
 	],
 	#category : 'CIG-SDL3PostProcessing-ForwardingAPI',
 	#package : 'CIG-SDL3PostProcessing',
@@ -65,7 +65,7 @@ CIGSDL3Scripts >> camelCasedWordsOf: aString [
 						"Most common case: first or second char is lowercase"
 						words add: word ]
 					ifFalse: [
-						"Special case: word begins with an ACRONYM, and we split in in a separate word"
+						"Special case: word begins with an ACRONYM, and we split it in a separate word"
 						words
 							add: (word first: index - 2);
 							add: (word allButFirst: index - 2) ].
@@ -93,11 +93,14 @@ CIGSDL3Scripts >> explicitPrefixRenames [
 CIGSDL3Scripts >> forwardingSelectorFor: method [
 	
 	| keywords newSelector |
-"(method selector = #releaseGPUFenceDevice:fence:) ifTrue: [1halt]."
+"	(method selector = #getGPUDeviceProperties:) ifTrue: [ 1halt ]."
 
 	keywords := self phase1: method.
 	newSelector := self phase2: keywords.
 	newSelector := self phase3: newSelector.
+
+"	newSelector = #gpuProperties ifTrue: [ 1halt ]."
+
 
 	^ newSelector
 ]
@@ -190,15 +193,10 @@ CIGSDL3Scripts >> phase1: method [
 
 	"We assume first argument is my entity, e.g. renderer, 
 	but CIG doesn't explicit it in the keyword when it is the only argument."
-	newFirstKeyword :=
-		possibleSelectorSubstrings
-			detect:  [ :suffix | keywords first endsWith: suffix ]
-			ifFound: [ :suffix |
-				"remove whole suffix"
-				keywords first allButLast: suffix size ]
-			ifNone:  [
-				"just remove colons"
-				keywords first allButLast: 1 ].
+	"A priori, just remove colons"
+	newFirstKeyword := keywords first allButLast: 1.
+	firstKeywordSubstringsToRemove do: [ :substr |
+		newFirstKeyword := newFirstKeyword copyReplaceAll: substr with: '' ].
 
 	"Prepare to do renames based on selector's first word"
 	wordsInFirstKeyword := self camelCasedWordsOf: newFirstKeyword.

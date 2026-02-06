@@ -10,7 +10,7 @@ Class {
 CIGSDL3WindowScripts >> initializeParameters [
 
 	targetArgument := #(#SDL_Window #*).
-	possibleSelectorSubstrings := #('Window:').
+	firstKeywordSubstringsToRemove := #('Window').
 	targetClass := self class environment classNamed: #SDL3Window.
 	theWord := 'window'.
 	excludedSelectors := #().

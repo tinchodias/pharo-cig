@@ -13,12 +13,13 @@ CIGSDL3GPUCommandBufferScripts >> initializeParameters [
 	"
 
 	targetArgument := #(SDL_GPUCommandBuffer*).
-	possibleSelectorSubstrings := #('GPUCommandBuffer:' 'CommandBuffer:').
+	firstKeywordSubstringsToRemove := #('GPUCommandBuffer' 'CommandBuffer').
 	targetClass := self class environment classNamed: #SDL3GPUCommandBuffer.
 	theWord := 'command_buffer'.
 	excludedSelectors := #().
 	explicitRenames := {
 		'submitGPUCommandBufferAndAcquireFence' -> 'submitAndAcquireFence'.
-		'waitAndAcquireGPUSwapchainTextureWindow:swapchainTexture:swapchainTextureWidth:swapchainTextureHeight:' -> 'waitAndAcquireGPUSwapchainTextureWindow:texture:width:height:'
+		'waitAndAcquireGPUSwapchainTextureWindow:swapchainTexture:swapchainTextureWidth:swapchainTextureHeight:' -> 'waitAndAcquireGPUSwapchainTextureForWindow:into:width:height:'.
+		#acquireGPUSwapchainTextureWindow:swapchainTexture:swapchainTextureWidth:swapchainTextureHeight: -> #acquireGPUSwapchainTextureForWindow:into:width:height:.
 		} asOrderedDictionary
 ]

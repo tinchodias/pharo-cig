@@ -10,7 +10,7 @@ Class {
 CIGSDL3SurfaceScripts >> initializeParameters [
 
 	targetArgument := #(#SDL_Surface #*).
-	possibleSelectorSubstrings := #('Surface:').
+	firstKeywordSubstringsToRemove := #('Surface').
 	targetClass := self class environment classNamed: #SDL3Surface.
 	theWord := 'surface'.
 	excludedSelectors :=  #(flipSurface:flip:).

@@ -13,7 +13,7 @@ CIGSDL3GPUComputePassScripts >> initializeParameters [
 	"
 
 	targetArgument := #(SDL_GPUComputePass*).
-	possibleSelectorSubstrings := #('GPUComputePass:' 'ComputePass:').
+	firstKeywordSubstringsToRemove := #('GPUComputePass' 'ComputePass').
 	targetClass := self class environment classNamed: #SDL3GPUComputePass.
 	theWord := 'compute_pass'.
 	excludedSelectors := #().

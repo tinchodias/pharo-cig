@@ -10,7 +10,7 @@ Class {
 CIGSDL3RendererScripts >> initializeParameters [
 
 	targetArgument := #(#SDL_Renderer #*).
-	possibleSelectorSubstrings := #('Renderer:').
+	firstKeywordSubstringsToRemove := #('Renderer').
 	targetClass := self class environment classNamed: #SDL3Renderer.
 	theWord := 'renderer'.
 	excludedSelectors := #().

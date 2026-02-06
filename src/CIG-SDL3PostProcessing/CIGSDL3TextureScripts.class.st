@@ -10,7 +10,7 @@ Class {
 CIGSDL3TextureScripts >> initializeParameters [
 
 	targetArgument := #(#SDL_Texture #*).
-	possibleSelectorSubstrings := #('Texture:').
+	firstKeywordSubstringsToRemove := #('Texture').
 	targetClass := self class environment classNamed: #SDL3Texture.
 	theWord := 'texture'.
 	excludedSelectors := #().

@@ -13,7 +13,7 @@ CIGSDL3GPUCopyPassScripts >> initializeParameters [
 	"
 
 	targetArgument := #(SDL_GPUCopyPass*).
-	possibleSelectorSubstrings := #('GPUCopyPass:' 'CopyPass:').
+	firstKeywordSubstringsToRemove := #('GPUCopyPass' 'CopyPass').
 	targetClass := self class environment classNamed: #SDL3GPUCopyPass.
 	theWord := 'copy_pass'.
 	excludedSelectors := #().

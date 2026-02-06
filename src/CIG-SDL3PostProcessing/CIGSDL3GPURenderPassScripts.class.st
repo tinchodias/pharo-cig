@@ -13,7 +13,7 @@ CIGSDL3GPURenderPassScripts >> initializeParameters [
 	"
 
 	targetArgument := #(SDL_GPURenderPass*).
-	possibleSelectorSubstrings := #('GPURenderPass:' 'RenderPass:').
+	firstKeywordSubstringsToRemove := #('GPURenderPass' 'RenderPass').
 	targetClass := self class environment classNamed: #SDL3GPURenderPass.
 	theWord := 'render_pass'.
 	excludedSelectors := #().

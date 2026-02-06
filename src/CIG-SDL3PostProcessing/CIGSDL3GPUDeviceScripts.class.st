@@ -8,11 +8,14 @@ Class {
 
 { #category : 'initialization' }
 CIGSDL3GPUDeviceScripts >> initializeParameters [
+	<script: 'self new generateForwardingAPI'>
 
 	targetArgument := #(SDL_GPUDevice*).
-	possibleSelectorSubstrings := #('GPUDevice:').
+	firstKeywordSubstringsToRemove := #('GPUDevice' 'Device').
 	targetClass := self class environment classNamed: #SDL3GPUDevice.
 	theWord := 'device'.
 	excludedSelectors := #().
-	explicitRenames := {} asOrderedDictionary
+	explicitRenames := {
+		#claimWindowForWindow: -> #claimWindow:.
+		} asOrderedDictionary
 ]
