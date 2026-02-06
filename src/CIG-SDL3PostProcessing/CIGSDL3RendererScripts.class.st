@@ -10,11 +10,10 @@ Class {
 CIGSDL3RendererScripts >> initializeParameters [
 
 	targetArgument := #(#SDL_Renderer #*).
-	suffix := 'Renderer:'.
+	possibleSelectorSubstrings := #('Renderer:').
 	targetClass := self class environment classNamed: #SDL3Renderer.
 	theWord := 'renderer'.
 	excludedSelectors := #().
-"	excludedSelectors := #(renderCoord renderFill renderGeom renderLine renderPoint renderRect renderTexture renderDebugText)."
 	explicitRenames := {
 	 	'renderViewportSet' -> 'isRenderViewportSet'.
 		'renderClipEnabled' -> 'isRenderClipEnabled'.

@@ -10,7 +10,7 @@ Class {
 CIGSDL3GPURenderStateScripts >> initializeParameters [
 
 	targetArgument := #(SDL_GPURenderState*).
-	suffix := 'GPURenderState:'.
+	possibleSelectorSubstrings := #('GPURenderState:').
 	targetClass := self class environment classNamed: #SDL3GPURenderState.
 	theWord := 'state'.
 	excludedSelectors := #().

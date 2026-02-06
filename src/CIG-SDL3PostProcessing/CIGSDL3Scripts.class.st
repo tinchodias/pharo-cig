@@ -3,13 +3,13 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'targetArgument',
-		'suffix',
 		'targetClass',
 		'explicitRenames',
 		'theWord',
 		'excludedSelectors',
 		'ffiCallMethods',
-		'methodsAndForwardingSelectors'
+		'methodsAndForwardingSelectors',
+		'possibleSelectorSubstrings'
 	],
 	#category : 'CIG-SDL3PostProcessing-ForwardingAPI',
 	#package : 'CIG-SDL3PostProcessing',
@@ -129,7 +129,7 @@ CIGSDL3Scripts >> generateForwardingAPI [
 			header.
 			messageSend
 			}.
-		(targetClass >> (targetClass compile: sourceCode classified: #'* SDL3-API')) reformat ]
+		(targetClass >> (targetClass compile: sourceCode classified: #'*SDL3-API')) reformat ]
 ]
 
 { #category : 'initialization' }
@@ -182,7 +182,7 @@ CIGSDL3Scripts >> initializeParameters [
 	self subclassResponsibility
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 CIGSDL3Scripts >> phase1: method [
 
 	| keywords newFirstKeyword wordsInFirstKeyword |
@@ -190,9 +190,15 @@ CIGSDL3Scripts >> phase1: method [
 
 	"We assume first argument is my entity, e.g. renderer, 
 	but CIG doesn't explicit it in the keyword when it is the only argument."
-	newFirstKeyword := (keywords first endsWith: suffix)
-		ifTrue: [ keywords first allButLast: suffix size "remove whole suffix" ]
-		ifFalse: [ keywords first allButLast: 1 "just remove colons" ].
+	newFirstKeyword :=
+		possibleSelectorSubstrings
+			detect:  [ :suffix | keywords first endsWith: suffix ]
+			ifFound: [ :suffix |
+				"remove whole suffix"
+				keywords first allButLast: suffix size ]
+			ifNone:  [
+				"just remove colons"
+				keywords first allButLast: 1 ].
 
 	"Prepare to do renames based on selector's first word"
 	wordsInFirstKeyword := self camelCasedWordsOf: newFirstKeyword.
@@ -231,7 +237,7 @@ CIGSDL3Scripts >> phase1: method [
 	^ keywords
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 CIGSDL3Scripts >> phase2: input [
 
 	| keywords newFirstKeyword wordsInFirstKeyword |
@@ -264,17 +270,17 @@ CIGSDL3Scripts >> phase3: input [
 	| newSelector |
 	newSelector := input.
 	
+	"More generic"
+	self explicitPrefixRenames keysAndValuesDo: [ :eachPrefix :eachReplacement |
+		(newSelector beginsWith: eachPrefix) ifTrue: [
+			newSelector := eachReplacement, (newSelector allButFirst: eachPrefix size) ] ].
+
 	"Explicit renames"
 	explicitRenames
 		at: newSelector
 		ifPresent: [ :value |
 			explicitRenames removeKey: newSelector.
 			newSelector := value ].
-
-	"More generic"
-	self explicitPrefixRenames keysAndValuesDo: [ :eachPrefix :eachReplacement |
-		(newSelector beginsWith: eachPrefix) ifTrue: [
-			newSelector := eachReplacement, (newSelector allButFirst: eachPrefix size) ] ].
 
 	^ newSelector
 ]

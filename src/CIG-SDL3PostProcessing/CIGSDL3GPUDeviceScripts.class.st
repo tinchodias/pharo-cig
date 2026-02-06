@@ -10,7 +10,7 @@ Class {
 CIGSDL3GPUDeviceScripts >> initializeParameters [
 
 	targetArgument := #(SDL_GPUDevice*).
-	suffix := 'GPUDevice:'.
+	possibleSelectorSubstrings := #('GPUDevice:').
 	targetClass := self class environment classNamed: #SDL3GPUDevice.
 	theWord := 'device'.
 	excludedSelectors := #().
