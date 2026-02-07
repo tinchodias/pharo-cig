@@ -163,6 +163,96 @@ CIGSDL3PostSteps class >> step4cSDL3MouseEvent [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step4dMore [
+
+	| eventClass |
+	eventClass :=
+		(SDL3MappedEvent << #SDL3DeviceEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+	eventClass comment: 'My subclasses are related to a pluggable device'.
+
+	(SDL3MappedEvent allSubclasses copyWithout: eventClass)
+		select: [ :each |
+			(each name includesSubstring: 'Device')
+			and: [ each superclass = SDL3MappedEvent ] ]
+		thenDo: [ :each | each superclass: eventClass ].
+
+"---"
+
+	eventClass :=
+		(SDL3MappedEvent << #SDL3GamepadEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+	eventClass comment: 'My subclasses are related to a gamepad.'.
+
+	(SDL3MappedEvent allSubclasses copyWithout: eventClass)
+		select: [ :each |
+			(each name includesSubstring: 'Gamepad')
+			and: [ each superclass = SDL3MappedEvent ] ]
+		thenDo: [ :each | each superclass: eventClass ].
+
+"---"
+
+	eventClass :=
+		(SDL3WindowIDEvent << #SDL3PenEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+	eventClass comment: 'My subclasses are related to a pen device.'.
+
+	(SDL3MappedEvent allSubclasses copyWithout: eventClass)
+		select: [ :each |
+			(each name includesSubstring: 'Pen')
+			and: [ each superclass = SDL3WindowIDEvent ] ]
+		thenDo: [ :each | each superclass: eventClass ].
+
+"---"
+
+	eventClass :=
+		(SDL3MappedEvent << #SDL3JoystickEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+	eventClass comment: 'My subclasses are related to a joystick.'.
+
+	(SDL3MappedEvent allSubclasses copyWithout: eventClass)
+		select: [ :each |
+			(each name includesSubstring: 'Joy')
+			and: [ each superclass = SDL3MappedEvent ] ]
+		thenDo: [ :each | each superclass: eventClass ].
+
+"---"
+
+	eventClass :=
+		(SDL3WindowIDEvent << #SDL3TextEvent
+			slots: {};
+			tag: 'Own';
+			package: 'SDL3') install.
+	eventClass comment: 'My subclasses are related to text input.'.
+
+	(SDL3MappedEvent allSubclasses copyWithout: eventClass)
+		select: [ :each |
+			(each name includesSubstring: 'Text')
+			and: [ each superclass = SDL3WindowIDEvent ] ]
+		thenDo: [ :each | each superclass: eventClass ].
+
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step4zEventVisitor [
+	"Add visitor API"
+
+	SDL3MappedEvent withAllSubclassesDo: [ :each |
+		each compile: ('accept: aVisitor
+
+	^ aVisitor visit{1}: self' format: { each name withoutPrefix: 'SDL3' })
+			classified: 'visitor' ]
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step5DeleteUnneededEventsAPI [
 
 	SDL3MappedEvent allSubclassesDo: [ :each | each removeSelector: #type ].
