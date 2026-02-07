@@ -183,6 +183,20 @@ CIGSDL3PostSteps class >> step6DeleteDispose [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step7DeleteUnneededStructAPI [
+
+	SDL3Structure allSubclassesDo: [ :each |
+		{#reserved.
+		#padding1.
+		#padding2.
+		#padding3.
+		#padding4} do: [ :eachSelector |
+			each
+				removeSelector: eachSelector;
+				removeSelector: (eachSelector, ':') asSymbol ] ]
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step99AddGitRepo [
 
 	| remote repository |
