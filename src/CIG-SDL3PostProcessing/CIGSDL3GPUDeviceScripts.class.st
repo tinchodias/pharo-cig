@@ -17,5 +17,6 @@ CIGSDL3GPUDeviceScripts >> initializeParameters [
 	excludedSelectors := #().
 	explicitRenames := {
 		#claimWindowForWindow: -> #claimWindow:.
+		#releaseWindowFromWindow: -> #releaseWindow:
 		} asOrderedDictionary
 ]
