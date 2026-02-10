@@ -253,6 +253,40 @@ CIGSDL3PostSteps class >> step4zEventVisitor [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step4zzFineGrainedEvents [
+
+	SDL3MappedEvent allSubclasses
+		select: [ :each | each eventTypeSelectors size > 1 ]
+		thenDo: [ :each |
+			| prefix |
+			prefix := each eventTypeSelectors commonPrefix.
+			each eventTypeSelectors do: [ :eachType |
+				| insert newName newClass |
+				insert := eachType withoutPrefix: prefix.
+				newName := (each name withoutSuffix: 'Event'), insert, 'Event'.
+				newClass := (each << newName asSymbol
+					slots: {};
+					tag: 'Events';
+					package: 'SDL3') install.
+
+				each classSide removeSelector: #eventTypeSelectors.
+				newClass classSide
+					compile: ('eventTypeSelectors
+
+		^ #({1})' format: { eachType storeString })
+					classified: '*SDL3-Own'.
+
+				newClass comment: ('I am a FFI structure that represents the `{1}` SDL3 event. The accessing protocol is defined by my superclass.' format: { (SDL3EventType perform: eachType) item }) ] ].
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step4zzzEventsTag [
+
+	"Set package tag of other existing classes"
+	SDL3MappedEvent withAllSubclassesDo: [:each | each packageTag: 'Events' ]
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step5DeleteUnneededEventsAPI [
 
 	SDL3MappedEvent allSubclassesDo: [ :each | each removeSelector: #type ].
