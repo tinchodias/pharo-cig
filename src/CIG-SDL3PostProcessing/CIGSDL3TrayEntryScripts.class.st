@@ -16,5 +16,7 @@ CIGSDL3TrayEntryScripts >> initializeParameters [
 	theWord := 'entry'.
 	excludedSelectors := #().
 	explicitRenames := {
+		#newTraySubmenu -> #newSubmenu.
+		#traySubmenu -> #submenu
 		} asOrderedDictionary
 ]
