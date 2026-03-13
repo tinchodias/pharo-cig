@@ -32,5 +32,5 @@ LibClang >> runner [
 { #category : 'accessing - platform' }
 LibClang >> unix64LibraryName [
 
-	^ FFIUnix64LibraryFinder findAnyLibrary: #('libclang.so' 'libclang.so.0')
+	^ FFIUnix64LibraryFinder findAnyLibrary: #('libclang.so' 'libclang.so.0' 'libclang-18.so.1')
 ]

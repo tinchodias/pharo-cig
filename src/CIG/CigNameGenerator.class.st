@@ -10,12 +10,18 @@ Class {
 		'withPrefixInFunctionName',
 		'withFunctionProtocolGroupByHeader',
 		'renaming',
-		'prefixesToStrip'
+		'renamingBlocks'
 	],
 	#category : 'CIG-Base',
 	#package : 'CIG',
 	#tag : 'Base'
 }
+
+{ #category : 'accessing - scripting' }
+CigNameGenerator >> addRenamingBlock: aUnaryBlock [
+
+	renamingBlocks := renamingBlocks copyWith: aUnaryBlock
+]
 
 { #category : 'private' }
 CigNameGenerator >> applyCamelCaseTo: aString [
@@ -36,10 +42,11 @@ CigNameGenerator >> applyFunctionModifiersTo: aString in: anElement [
 		result := self 
 			applyRemovePrefixInName: result
 			prefix: anElement root prefix ].
-	prefixesToStrip do: [ :each |
-		result := self 
-			applyRemovePrefixInName: result 
-			prefix: each ].
+	renamingBlocks do: [ :each |
+		result := each value: result ].
+
+	result := result asCamelcasedUnderscores.
+	result := result uncapitalized.
 
 	^ result
 ]
@@ -71,7 +78,7 @@ CigNameGenerator >> applyRemovePrefixInName: aString prefix: prefix [
 	[ result first = $_ ] 
 	whileTrue: [ result := result allButFirst ].
 	
-	^ result
+	^ result uncapitalized 
 ]
 
 { #category : 'initialization' }
@@ -82,7 +89,7 @@ CigNameGenerator >> initialize [
 	self withCamelCase.
 	self withPrefixInFunctionName.
 	self withFunctionProtocolGroupByHeader.
-	prefixesToStrip := #()
+	renamingBlocks := #()
 ]
 
 { #category : 'testing' }
@@ -127,7 +134,21 @@ CigNameGenerator >> stripPrefix: aPrefix [
 	 that are now *equal* to the package prefix we selected (e.g. I have pixman library with 
 	 prefix Px but I want to remove also 'pixman' prefix. "
 
-	prefixesToStrip := prefixesToStrip copyWith: aPrefix
+	self stripPrefix: aPrefix by: ''
+]
+
+{ #category : 'accessing - scripting' }
+CigNameGenerator >> stripPrefix: aPrefix by: newPrefix [
+
+	self addRenamingBlock: [ :aString |
+		(aString asLowercase beginsWith: aPrefix asLowercase)
+			ifFalse: [ aString ]
+			ifTrue: [
+				| result |
+				result := aString allButFirst: aPrefix size.
+				[ result first = $_ ] whileTrue: [
+					result := result allButFirst ].
+				newPrefix, result ] ]
 ]
 
 { #category : 'visiting' }
@@ -158,8 +179,7 @@ CigNameGenerator >> visitElement: anElement [
 	prefix := self prefixToUse: unit prefix.
 		
 	name := self applyCamelCaseTo: anElement sanitizedName.
-	prefixesToStrip do: [ :each | 
-		name := self applyRemovePrefixInName: name prefix: each ].
+	renamingBlocks do: [ :each | name := each value: name ].
 	fullName := self applyPrefixTo: name prefix: prefix.
 	
 	(anElement name beginsWith: prefix) ifFalse: [

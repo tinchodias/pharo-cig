@@ -25,10 +25,10 @@ CigTFunction >> buildParameters: aCollection on: stream [
 		 otherwise, just skeep it"
 		((aCollection size > 1) 
 			and: [ (each nameMatchesLastOf: stream contents) not ])
-			ifTrue: [ stream << each name capitalized ].
+			ifTrue: [ stream << each name asCamelcasedUnderscores capitalized ].
 		stream << ': ' << each name << ' ' ].
 	aCollection allButFirst do: [ :each | 
-		stream << each name << ': ' << each name << ' ' ]
+		stream << each name asCamelcasedUnderscores uncapitalized << ': ' << each name << ' ' ]
 ]
 
 { #category : 'accessing' }
