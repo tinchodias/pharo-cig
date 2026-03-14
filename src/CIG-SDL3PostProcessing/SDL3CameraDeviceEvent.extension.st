@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3CameraDeviceEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3CameraDeviceEvent class >> eventTypeSelectors [
 
 	^ #(#cameraDeviceDenied #cameraDeviceAdded #cameraDeviceApproved #cameraDeviceRemoved)

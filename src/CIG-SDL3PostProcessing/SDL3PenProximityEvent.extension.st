@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3PenProximityEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3PenProximityEvent class >> eventTypeSelectors [
 
 	^ #(#penProximityIn #penProximityOut)

@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3RenderEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3RenderEvent class >> eventTypeSelectors [
 
 	^ #(#renderDeviceLost #renderTargetsReset #renderDeviceReset)

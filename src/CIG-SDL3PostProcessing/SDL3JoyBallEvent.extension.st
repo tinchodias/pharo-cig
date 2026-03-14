@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3JoyBallEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3JoyBallEvent class >> eventTypeSelectors [
 
 	^ #(#joystickBallMotion)

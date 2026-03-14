@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3QuitEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3QuitEvent class >> eventTypeSelectors [
 
 	^ #(#quit)

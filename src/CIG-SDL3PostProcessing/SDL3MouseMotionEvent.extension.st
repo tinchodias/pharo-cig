@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3MouseMotionEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3MouseMotionEvent class >> eventTypeSelectors [
 
 	^ #(#mouseMotion)

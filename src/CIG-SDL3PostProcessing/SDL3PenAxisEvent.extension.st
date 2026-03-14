@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3PenAxisEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3PenAxisEvent class >> eventTypeSelectors [
 
 	^ #(#penAxis)

@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3AudioDeviceEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3AudioDeviceEvent class >> eventTypeSelectors [
 
 	^ #(#audioDeviceRemoved #audioDeviceFormatChanged #audioDeviceAdded)

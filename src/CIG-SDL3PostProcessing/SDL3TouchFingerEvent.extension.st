@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3TouchFingerEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3TouchFingerEvent class >> eventTypeSelectors [
 
 	^ #(#fingerDown #fingerMotion #fingerCanceled #fingerUp)

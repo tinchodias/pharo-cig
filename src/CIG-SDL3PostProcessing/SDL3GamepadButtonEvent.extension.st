@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3GamepadButtonEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3GamepadButtonEvent class >> eventTypeSelectors [
 
 	^ #(#gamepadButtonUp #gamepadButtonDown)

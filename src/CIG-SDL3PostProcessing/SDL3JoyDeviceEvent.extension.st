@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3JoyDeviceEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3JoyDeviceEvent class >> eventTypeSelectors [
 
 	^ #(#joystickAdded #joystickRemoved #joystickUpdateComplete)

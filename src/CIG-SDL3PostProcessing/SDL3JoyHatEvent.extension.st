@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3JoyHatEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3JoyHatEvent class >> eventTypeSelectors [
 
 	^ #(#joystickHatMotion)

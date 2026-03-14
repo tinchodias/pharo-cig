@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3TextEditingEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3TextEditingEvent class >> eventTypeSelectors [
 
 	^ #(#textEditing)

@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3SensorEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3SensorEvent class >> eventTypeSelectors [
 
 	^ #(#sensorUpdate)

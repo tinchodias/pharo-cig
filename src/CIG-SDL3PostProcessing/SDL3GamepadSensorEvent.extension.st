@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3GamepadSensorEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3GamepadSensorEvent class >> eventTypeSelectors [
 
 	^ #(#gamepadSensorUpdate)

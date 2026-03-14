@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3UserEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3UserEvent class >> eventTypeSelectors [
 
 	^ #(#user)

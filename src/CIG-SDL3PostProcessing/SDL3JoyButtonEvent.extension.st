@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3JoyButtonEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3JoyButtonEvent class >> eventTypeSelectors [
 
 	^ #(#joystickButtonDown #joystickButtonUp)

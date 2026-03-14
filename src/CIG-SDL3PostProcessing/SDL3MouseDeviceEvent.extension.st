@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3MouseDeviceEvent' }
 
-{ #category : '*SDL3-Own' }
+{ #category : '*CIG-SDL3PostProcessing' }
 SDL3MouseDeviceEvent class >> eventTypeSelectors [
 
 	^ #(#mouseAdded #mouseRemoved)
