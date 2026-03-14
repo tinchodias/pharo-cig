@@ -257,7 +257,7 @@ CIGSDL3PostSteps class >> step4zzFineGrainedEvents [
 				newClass classSide
 					compile: ('eventTypeSelectors
 
-		^ #({1})' format: { eachType storeString })
+	^ #({1})' format: { eachType storeString })
 					classified: '*SDL3-Own'.
 
 				newClass comment: ('I am a FFI structure that represents the `{1}` SDL3 event. The accessing protocol is defined by my superclass.' format: { (SDL3EventType perform: eachType) item }) ] ].
