@@ -132,6 +132,9 @@ CIGSDL3PostSteps class >> step4bSDL3WindowIDEvent [
 CIGSDL3PostSteps class >> step4cSDL3MouseEvent [
 
 	| eventClass |
+	"TODO: chasing cycle"
+"	self environment at: #SDL3MouseEvent ifPresent: #removeFromSystem."
+	self assert: (self environment includesKey: #SDL3MouseEvent) not.
 	eventClass :=
 		(SDL3MappedEvent << #SDL3MouseEvent
 			slots: {};
