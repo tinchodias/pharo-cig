@@ -123,7 +123,7 @@ CIGSDL3PostSteps class >> step4bSDL3WindowIDEvent [
 
 	SDL3MouseEvent superclass: eventClass.
 
-	SDL3MappedEvent subclasses
+	(SDL3MappedEvent subclasses copyWithout: eventClass)
 		select: [ :each | each includesSelector: #windowID ]
 		thenDo: [ :each | each superclass: eventClass ]
 ]
