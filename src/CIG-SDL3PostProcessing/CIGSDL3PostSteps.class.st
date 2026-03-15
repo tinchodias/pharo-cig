@@ -227,39 +227,46 @@ CIGSDL3PostSteps class >> step4dMoreIntermediateEvents [
 
 { #category : 'steps' }
 CIGSDL3PostSteps class >> step4eInsertLeavesByType [
-
-	"SDL3CommonEvent is the only subclass that doesn't have event type"
+	"... and compile all #eventType.
+	SDL3CommonEvent is the only subclass that doesn't have event type"
 
 	| compileBlock |
 	compileBlock := [ :eventClass :typeSelector |
-			eventClass classSide
-				compile: ('eventType
+		eventClass classSide
+			compile: ('eventType
 
 	^ SDL3EventType ', typeSelector asString)
-				classified: 'accessing' ].
+			classified: 'accessing' ].
 
+	SDL3MappedEvent classSide
+		compile: 'eventType
+	"Answer the `SDL3EventType` associated to this event. Non-leaf subclasses and `SDL3CommonEvent` answer nil."
 
-	(SDL3MappedEvent allSubclasses copyWithout: SDL3CommonEvent) do: [ :each |
-		each eventTypeSelectors size > 1
-			ifFalse: [
-				self assert: each eventTypeSelectors size = 1.
-				compileBlock value: each value: each eventTypeSelectors first ]
-			ifTrue: [
-				| prefix |
-				prefix := each eventTypeSelectors commonPrefix.
-				each eventTypeSelectors do: [ :eachType |
-					| insert newName newClass |
-					insert := eachType withoutPrefix: prefix.
-					newName := (each name withoutSuffix: 'Event'), insert, 'Event'.
-					newClass := (each << newName asSymbol
-						slots: {};
-						tag: 'Events';
-						package: 'SDL3') install.
+	^ nil'
+		classified: 'accessing'.
 
-					newClass comment: ('I represent the `{1}` SDL3 event type. My FFI structure fields and their corresponding accessing protocol are defined on my superclass.' format: { (SDL3EventType perform: eachType) item }).
+	SDL3MappedEvent allSubclasses
+		reject: [ :each | each eventTypeSelectors isEmpty ]
+		thenDo: [ :each |
+			each eventTypeSelectors size > 1
+				ifFalse: [
+					compileBlock value: each value: each eventTypeSelectors first ]
+				ifTrue: [
+					| prefix |
+					prefix := each eventTypeSelectors commonPrefix.
+					each eventTypeSelectors do: [ :eachType |
+						| insert newName newClass |
+						insert := eachType withoutPrefix: prefix.
+						newName := (each name withoutSuffix: 'Event'), insert, 'Event'.
+						newClass := (each << newName asSymbol
+							slots: {};
+							tag: 'Events';
+							package: 'SDL3') install.
 
-					compileBlock value: newClass value: eachType ].
-		] ]
+						newClass comment: ('I represent the `{1}` SDL3 event type. My FFI structure fields and their corresponding accessing protocol are defined on my superclass.' format: { (SDL3EventType perform: eachType) item }).
+
+						compileBlock value: newClass value: eachType ].
+			] ]
 ]
 
 { #category : 'steps' }
