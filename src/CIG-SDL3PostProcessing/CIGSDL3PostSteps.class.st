@@ -239,28 +239,38 @@ CIGSDL3PostSteps class >> step4zEventVisitor [
 { #category : 'steps' }
 CIGSDL3PostSteps class >> step4zzFineGrainedEvents [
 
-	SDL3MappedEvent allSubclasses
-		select: [ :each | each eventTypeSelectors size > 1 ]
-		thenDo: [ :each |
-			| prefix |
-			prefix := each eventTypeSelectors commonPrefix.
-			each eventTypeSelectors do: [ :eachType |
-				| insert newName newClass |
-				insert := eachType withoutPrefix: prefix.
-				newName := (each name withoutSuffix: 'Event'), insert, 'Event'.
-				newClass := (each << newName asSymbol
-					slots: {};
-					tag: 'Events';
-					package: 'SDL3') install.
+	"SDL3CommonEvent is the only subclass that doesn't have event type"
 
-				each classSide removeSelector: #eventTypeSelectors.
-				newClass classSide
-					compile: ('eventTypeSelectors
+	| compileBlock |
+	compileBlock := [ :eventClass :typeSelector |
+			eventClass classSide
+				compile: ('eventType
 
-	^ #({1})' format: { eachType storeString })
-					classified: '*SDL3-Own'.
+	^ SDL3EventType ', typeSelector asString)
+				classified: 'accessing' ].
 
-				newClass comment: ('I am a FFI structure that represents the `{1}` SDL3 event. The accessing protocol is defined by my superclass.' format: { (SDL3EventType perform: eachType) item }) ] ].
+
+	(SDL3MappedEvent allSubclasses copyWithout: SDL3CommonEvent) do: [ :each |
+		each eventTypeSelectors size > 1
+			ifFalse: [
+				self assert: each eventTypeSelectors size = 1.
+				compileBlock value: each value: each eventTypeSelectors first ]
+			ifTrue: [
+				| prefix |
+				prefix := each eventTypeSelectors commonPrefix.
+				each eventTypeSelectors do: [ :eachType |
+					| insert newName newClass |
+					insert := eachType withoutPrefix: prefix.
+					newName := (each name withoutSuffix: 'Event'), insert, 'Event'.
+					newClass := (each << newName asSymbol
+						slots: {};
+						tag: 'Events';
+						package: 'SDL3') install.
+
+					newClass comment: ('I represent the `{1}` SDL3 event type. My FFI structure fields and their corresponding accessing protocol are defined on my superclass.' format: { (SDL3EventType perform: eachType) item }).
+
+					compileBlock value: newClass value: eachType ].
+		] ]
 ]
 
 { #category : 'steps' }
