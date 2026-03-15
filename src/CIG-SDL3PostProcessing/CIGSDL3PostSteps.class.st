@@ -147,7 +147,7 @@ CIGSDL3PostSteps class >> step4cSDL3MouseEvent [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step4dMore [
+CIGSDL3PostSteps class >> step4dMoreIntermediateEvents [
 
 	| eventClass |
 	eventClass :=
@@ -226,18 +226,7 @@ CIGSDL3PostSteps class >> step4dMore [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step4zEventVisitor [
-	"Add visitor API"
-
-	SDL3MappedEvent withAllSubclassesDo: [ :each |
-		each compile: ('accept: aVisitor
-
-	^ aVisitor visit{1}: self' format: { each name withoutPrefix: 'SDL3' })
-			classified: 'visitor' ]
-]
-
-{ #category : 'steps' }
-CIGSDL3PostSteps class >> step4zzFineGrainedEvents [
+CIGSDL3PostSteps class >> step4eInsertLeavesByType [
 
 	"SDL3CommonEvent is the only subclass that doesn't have event type"
 
@@ -271,6 +260,17 @@ CIGSDL3PostSteps class >> step4zzFineGrainedEvents [
 
 					compileBlock value: newClass value: eachType ].
 		] ]
+]
+
+{ #category : 'steps' }
+CIGSDL3PostSteps class >> step4zEventVisitor [
+	"Add visitor API"
+
+	SDL3MappedEvent withAllSubclassesDo: [ :each |
+		each compile: ('accept: aVisitor
+
+	^ aVisitor visit{1}: self' format: { each name withoutPrefix: 'SDL3' })
+			classified: 'visitor' ]
 ]
 
 { #category : 'steps' }
