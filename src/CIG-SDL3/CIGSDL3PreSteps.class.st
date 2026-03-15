@@ -11,7 +11,7 @@ CIGSDL3PreSteps class >> step1Generate [
 	CigType typeMap at: 'wchar_t' put: #int.
 
 	CigCLibraryGenerator new
-		prefix: 'SDL';
+		prefix: 'S3';
 		packageName: 'SDL3';
 		libraryName: 'SDL3';
 		cIncludePath: 'SDL/include' asFileReference;
@@ -22,10 +22,16 @@ CIGSDL3PreSteps class >> step1Generate [
 		withNameGenerator: [ :gen |
 			gen stripPrefix: 'SDL_GUID' by: 'guid'.
 			gen stripPrefix: 'SDL_GPU' by: 'gpu'.
-			gen stripPrefix: 'SDL_EGL' by: 'egl'.
+			gen stripPrefix: 'SDL_UCS4' by: 'ucs4'.
+			gen stripPrefix: 'SDL_IO' by: 'io'.
+
+			gen stripPrefix: 'SDL_Metal_' by: 'metal'.
+			gen stripPrefix: 'SDL_EGL_' by: 'egl'.
 			gen stripPrefix: 'SDL_GL_' by: 'gl'.
+			gen stripPrefix: 'SDL_'.
+
 			gen stripPrefix: 'create' by: 'new'.
-			gen stripPrefix: 'SDL_' ];
+			];
 		withElementGenerator: [ :gen | gen makeAllFunctionsReturningStringReturnPointer ];
 		generate
 ]
