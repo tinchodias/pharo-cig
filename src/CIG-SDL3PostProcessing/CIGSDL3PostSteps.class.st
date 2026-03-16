@@ -13,6 +13,20 @@ CIGSDL3PostSteps class >> step0Override [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step1RemoveMetaEventTypes [
+
+	SDL3EventType classSide methods
+		select: [ :each | (each selector endsWith: '_FIRST') or: [ each selector endsWith: '_LAST' ] ]
+		thenDo: [ :each |
+			each removeFromSystem.
+			SDL3EventType removeClassVarNamed: each selector ].
+
+	"SDL3EventType classVarNames
+		select: [ :each | (each endsWith: '_FIRST') or: [ each endsWith: '_LAST' ] ]
+		thenDo: [ :each | 	SDL3EventType removeClassVarNamed: each ]."
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step2Enums [
 
 	(SDL3Enumeration allSubclasses sorted: [:a :b | a name < b name])
