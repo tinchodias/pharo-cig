@@ -37,28 +37,8 @@ CIGSDL3PreSteps class >> step1Generate [
 ]
 
 { #category : 'steps' }
-CIGSDL3PreSteps class >> step2RemoveTrash [
-
-	#(SDL3DUMMYENUM BaselineOfSDL3) do: [ :each |
-		(self environment at: each) removeFromSystem ]
-]
-
-{ #category : 'steps' }
-CIGSDL3PreSteps class >> step4FixBool [
-
-	LibSDL3 compile: '_Bool '.
-	(ReRenameMethodRefactoring new
-		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
-		renameMethod: #_Bool
-		in: LibSDL3
-		to: 'bool'
-		permutation: #(  );
-		renameChanges) execute.
-	LibSDL3 removeSelector: #bool
-]
-
-{ #category : 'steps' }
-CIGSDL3PreSteps class >> step6RenameClasses [
+CIGSDL3PreSteps class >> step2RenameClasses [
+	"Unify prefixes and remove underscores"
 
 	#(
 	'S3SDL_'
@@ -89,4 +69,25 @@ CIGSDL3PreSteps class >> step6RenameClasses [
 			Stdio stdout print: each; lf.
 			(ReRenameClassRefactoring rename: each key name to: each value) execute ]	
 		]
+]
+
+{ #category : 'steps' }
+CIGSDL3PreSteps class >> step3RemoveBaseline [
+	"We have our own already"
+
+	(self environment at: #BaselineOfSDL3) removeFromSystem
+]
+
+{ #category : 'steps' }
+CIGSDL3PreSteps class >> step4FixBool [
+
+	LibSDL3 compile: '_Bool '.
+	(ReRenameMethodRefactoring new
+		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
+		renameMethod: #_Bool
+		in: LibSDL3
+		to: 'bool'
+		permutation: #(  );
+		renameChanges) execute.
+	LibSDL3 removeSelector: #bool
 ]
