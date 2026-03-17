@@ -21,6 +21,8 @@ CIGSDL3PostSteps class >> step1RemoveMetaEventTypes [
 			each removeFromSystem.
 			SDL3EventType removeClassVarNamed: each selector ].
 
+	"Need any of this? SDL3EventType initializeEnumeration; rebuildEnumAccessors"
+
 	"SDL3EventType classVarNames
 		select: [ :each | (each endsWith: '_FIRST') or: [ each endsWith: '_LAST' ] ]
 		thenDo: [ :each | 	SDL3EventType removeClassVarNamed: each ]."
