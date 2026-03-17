@@ -17,6 +17,8 @@ CIGSDL3PreSteps class >> step1Generate [
 		cIncludePath: 'SDL/include' asFileReference;
 		cIncludePath: 'SDL/include/SDL3' asFileReference;
 		importUnit: '
+#define DOXYGEN_SHOULD_IGNORE_THIS
+#define SDL_WIKI_DOCUMENTATION_SECTION
 #include <SDL.h>
 ';
 		withNameGenerator: [ :gen |
