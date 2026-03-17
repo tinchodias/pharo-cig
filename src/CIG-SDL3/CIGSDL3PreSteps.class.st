@@ -58,68 +58,6 @@ CIGSDL3PreSteps class >> step4FixBool [
 ]
 
 { #category : 'steps' }
-CIGSDL3PreSteps class >> step5RenameAPI [
-
-	| prefixRules renames env model allChanges |
-	prefixRules := {
-		'SDL_GL_' -> 'gl'.
-		'SDL_EGL_' -> 'egl'.
-		'SDL_GPU' -> 'gpu'.
-		'SDL_GUID' -> 'guid'.
-		'SDL_Create' -> 'new'.
-		'SDL_' -> '' }.
-
-	"First pass, fix prefixes"
-	renames := LibSDL3 selectors sorted
-		select: [ :each | prefixRules anySatisfy: [ :rule | each beginsWith: rule key ] ] 
-		thenCollect: [ :oldSelector |
-			| newSelector rule |
-			rule := prefixRules detect: [ :r | oldSelector beginsWith: r key ].
-			newSelector := oldSelector allButFirst: rule key size.
-			newSelector := rule value, newSelector.
-			oldSelector -> newSelector ].
-
-	"Convert underscores to CamelCase"
-	renames withIndexDo: [ :assoc :index |
-		| newSelector |
-		newSelector := assoc value.
-		(assoc value includes: $_) ifTrue: [
-			newSelector :=
-				String streamContents: [ :writeStream | | readStream |
-					readStream := newSelector readStream.
-					[ readStream atEnd ] whileFalse: [
-						writeStream nextPutAll: (readStream upTo: $_) capitalized ] ].
-			renames
-				at: index
-				put: assoc key -> newSelector ] ].
-
-	"Make first letter lowercase"
-	renames withIndexDo: [ :assoc :index |
-		| newSelector |
-		assoc traceCr.
-
-		newSelector := assoc value.
-		newSelector at: 1 put: (newSelector first asLowercase).
-		renames
-			at: index
-			put: assoc key -> newSelector ].
-
-	env := RBPackageEnvironment packageNames: #('SDL3' "'SDL3-Own' 'SDL3-Tests'").
-	model := RBNamespace onEnvironment: env.
-	allChanges := renames flatCollect: [ :assoc |
-		| changes |
-		changes := (ReRenameMethodRefactoring new
-	        model: model;
-	        renameMethod: assoc key
-	        	in: LibSDL3
-				to: assoc value
-				permutation: (1 to: assoc key numArgs);
-	        renameChanges) changes ].
-
-	allChanges do: #generateChanges
-]
-
-{ #category : 'steps' }
 CIGSDL3PreSteps class >> step6RenameClasses [
 
 	#(
