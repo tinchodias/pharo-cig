@@ -29,7 +29,7 @@ CigConstantGeneratorGroupStrategy >> collectConstantValues: aCollection [
 	1. generate temporal file and compile it, get results.
 	2. parse and collect results into a dictionary.
 	"
-	| macros fileReference binaryReference result |
+	| macros |
 
 	logger trace: aCollection.
 
