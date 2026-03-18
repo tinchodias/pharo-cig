@@ -146,7 +146,7 @@ CigNameGenerator >> stripPrefix: aPrefix by: newPrefix [
 			ifTrue: [
 				| result |
 				result := aString allButFirst: aPrefix size.
-				[ result first = $_ ] whileTrue: [
+				[ result notEmpty and: [ result first = $_ ] ] whileTrue: [
 					result := result allButFirst ].
 				newPrefix, result ] ]
 ]
