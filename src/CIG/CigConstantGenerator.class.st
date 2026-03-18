@@ -81,6 +81,22 @@ CigConstantGenerator >> groupByPrefix: aNumber [
 ]
 
 { #category : 'accessing' }
+CigConstantGenerator >> groupByRegexDictionary: aRegexDictionary [
+
+	self groupByRegexDictionary: aRegexDictionary ifNone: #Default
+]
+
+{ #category : 'accessing' }
+CigConstantGenerator >> groupByRegexDictionary: aRegexDictionary ifNone: aString [
+
+	groupStrategy := CigConstantGeneratorByRegex new
+		regexDictionary: aRegexDictionary;
+		defaultSuffix: aString;
+		configureWith: self;
+		yourself
+]
+
+{ #category : 'accessing' }
 CigConstantGenerator >> groupStrategy [
 
 	^ groupStrategy
