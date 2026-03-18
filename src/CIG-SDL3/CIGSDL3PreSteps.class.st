@@ -164,6 +164,16 @@ CIGSDL3PreSteps class >> step2RenameClasses [
 ]
 
 { #category : 'steps' }
+CIGSDL3PreSteps class >> step3DeleteClasses [
+
+"	self environment allClasses select: [ :each |
+		(each name beginsWith: 'SDL3') and: [
+		each name includesSubstring: 'DELETE'] ]."
+
+	(self environment at: #SDL3DELETEConstants) removeFromSystem
+]
+
+{ #category : 'steps' }
 CIGSDL3PreSteps class >> step4FixBool [
 
 	LibSDL3 compile: '_Bool '.
