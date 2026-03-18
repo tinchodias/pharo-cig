@@ -164,13 +164,6 @@ CIGSDL3PreSteps class >> step2RenameClasses [
 ]
 
 { #category : 'steps' }
-CIGSDL3PreSteps class >> step3RemoveBaseline [
-	"We have our own already"
-
-	(self environment at: #BaselineOfSDL3) removeFromSystem
-]
-
-{ #category : 'steps' }
 CIGSDL3PreSteps class >> step4FixBool [
 
 	LibSDL3 compile: '_Bool '.
