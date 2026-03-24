@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3Keymod' }
 
-{ #category : '*CIG-SDL3PostProcessing' }
+{ #category : '*CIG-SDL3-Own' }
 SDL3Keymod class >> enumDeclToCamelCaseDictionary [
 
 	^ super enumDeclToCamelCaseDictionary

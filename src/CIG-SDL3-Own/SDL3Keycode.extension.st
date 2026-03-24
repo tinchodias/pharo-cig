@@ -1,6 +1,6 @@
 Extension { #name : 'SDL3Keycode' }
 
-{ #category : '*CIG-SDL3PostProcessing' }
+{ #category : '*CIG-SDL3-Own' }
 SDL3Keycode class >> enumDeclToCamelCaseAt: aName prefix: prefix givenInvalidName: invalidName [
 
 	invalidName first isDigit ifFalse: [ self error ].
@@ -8,7 +8,7 @@ SDL3Keycode class >> enumDeclToCamelCaseAt: aName prefix: prefix givenInvalidNam
 	^ 'number', invalidName
 ]
 
-{ #category : '*CIG-SDL3PostProcessing' }
+{ #category : '*CIG-SDL3-Own' }
 SDL3Keycode class >> enumDeclToCamelCaseDictionary [
 	"
 	self enumDeclToCamelCaseDictionary
