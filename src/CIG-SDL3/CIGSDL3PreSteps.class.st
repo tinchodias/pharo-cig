@@ -29,6 +29,7 @@ CIGSDL3PreSteps class >> step1Generate [
 #define SDL_PLATFORM_LINUX 
 #define SDL_PLATFORM_UNIX 
 #define SDL_PLATFORM_MACOS
+#define SDL_PLATFORM_IOS
 #define SDL_PLATFORM_WINDOWS 
 #define SDL_PLATFORM_WIN32
 
@@ -59,7 +60,7 @@ CIGSDL3PreSteps class >> step1Generate [
 				'SDL_ELF_NOTE_DLOPEN.*' -> 'DELETE'.
 
 				'SDLK.*' -> 'Key'.
-				'SDL_KMOD.*' -> 'KeyMod'.
+				'SDL_KMOD.*' -> 'KeyModifier'.
 				'SDL_BUTTON.*' -> 'Button'.
 				'SDL_HAPTIC.*' -> 'Haptic'.
 				'SDL_HAT.*' -> 'Joystick'.
