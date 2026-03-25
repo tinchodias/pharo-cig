@@ -16,7 +16,7 @@ LibClang >> macLibraryName [
 
 	^ FFIMacLibraryFinder new
 		  userPaths:
-			  #('/usr/local/opt/llvm/lib' "<-- brew"
+			  #("'/usr/local/opt/llvm/lib' ""<-- brew, but why segfaults?"
 				 '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 			    '/Library/Developer/CommandLineTools/usr/lib' );
 		  findLibrary: 'libclang.dylib'
