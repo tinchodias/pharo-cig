@@ -16,8 +16,9 @@ LibClang >> macLibraryName [
 
 	^ FFIMacLibraryFinder new
 		  userPaths:
-			  #( '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib'
-			     '/Library/Developer/CommandLineTools/usr/lib' );
+			  #('/usr/local/opt/llvm/lib' "<-- brew"
+				 '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib'
+			    '/Library/Developer/CommandLineTools/usr/lib' );
 		  findLibrary: 'libclang.dylib'
 ]
 
