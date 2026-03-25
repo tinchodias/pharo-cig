@@ -138,7 +138,11 @@ CIGSDL3PostSteps class >> step4aSDL3MappedEvent [
 	evts := SDL3Structure subclasses
 		select: [ :each | each name endsWith: 'Event' ].
 	evts := evts copyWithout: eventClass.
-	evts do: [ :e | e superclass: eventClass ]
+	evts do: [ :e | e superclass: eventClass ].
+
+	eventClass classSide
+		compile: 'eventTypeSelectors<r><r><t>^ #()' expandMacros
+		classified: '*CIG-SDL3PostProcessing'
 ]
 
 { #category : 'steps' }
