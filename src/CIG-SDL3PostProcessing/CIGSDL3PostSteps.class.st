@@ -148,16 +148,15 @@ CIGSDL3PostSteps class >> step4aSDL3MappedEvent [
 { #category : 'steps' }
 CIGSDL3PostSteps class >> step4bSDL3WindowIDEvent [
 
-	| eventClass |
+	| mappedEventClass eventClass |
+	mappedEventClass := self environment at: #SDL3MappedEvent.
 	eventClass :=
-		(SDL3MappedEvent << #SDL3WindowIDEvent
+		(mappedEventClass << #SDL3WindowIDEvent
 			slots: {};
 			tag: 'Own';
 			package: 'SDL3') install.
 
-"	SDL3MouseEvent superclass: eventClass."
-
-	(SDL3MappedEvent subclasses copyWithout: eventClass)
+	(mappedEventClass subclasses copyWithout: eventClass)
 		select: [ :each | each includesSelector: #windowID ]
 		thenDo: [ :each | each superclass: eventClass ]
 ]
