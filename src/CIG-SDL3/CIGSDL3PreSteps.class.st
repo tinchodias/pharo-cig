@@ -173,17 +173,3 @@ CIGSDL3PreSteps class >> step3DeleteClasses [
 
 	(self environment at: #SDL3DELETEConstants) removeFromSystem
 ]
-
-{ #category : 'steps' }
-CIGSDL3PreSteps class >> step4FixBool [
-
-	LibSDL3 compile: '_Bool '.
-	(ReRenameMethodRefactoring new
-		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
-		renameMethod: #_Bool
-		in: LibSDL3
-		to: 'bool'
-		permutation: #(  );
-		renameChanges) execute.
-	LibSDL3 removeSelector: #bool
-]

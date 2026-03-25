@@ -7,6 +7,20 @@ Class {
 }
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step00FixBool [
+
+	LibSDL3 compile: '_Bool '.
+	(ReRenameMethodRefactoring new
+		model: (RBNamespace onEnvironment: LibSDL3 asEnvironment);
+		renameMethod: #_Bool
+		in: LibSDL3
+		to: 'bool'
+		permutation: #(  );
+		renameChanges) execute.
+	LibSDL3 removeSelector: #bool
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step0Override [
 
 	CIGSDL3Override applyOnAllSubclasses
