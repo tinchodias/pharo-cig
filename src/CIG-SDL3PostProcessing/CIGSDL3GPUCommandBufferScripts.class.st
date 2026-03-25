@@ -18,7 +18,6 @@ CIGSDL3GPUCommandBufferScripts >> initializeParameters [
 	theWord := 'command_buffer'.
 	excludedSelectors := #().
 	explicitRenames := {
-		'submitGPUCommandBufferAndAcquireFence' -> 'submitAndAcquireFence'.
 		'waitAndAcquireGPUSwapchainTextureWindow:swapchainTexture:swapchainTextureWidth:swapchainTextureHeight:' -> 'waitAndAcquireGPUSwapchainTextureForWindow:into:width:height:'.
 		#acquireGPUSwapchainTextureWindow:swapchainTexture:swapchainTextureWidth:swapchainTextureHeight: -> #acquireGPUSwapchainTextureForWindow:into:width:height:.
 		} asOrderedDictionary
