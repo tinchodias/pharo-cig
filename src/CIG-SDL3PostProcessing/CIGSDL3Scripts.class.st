@@ -89,6 +89,31 @@ CIGSDL3Scripts >> explicitPrefixRenames [
 		} asOrderedDictionary 
 ]
 
+{ #category : 'converting' }
+CIGSDL3Scripts >> forwardingMethodCategory [
+
+	^ #'*SDL3-API'
+]
+
+{ #category : 'converting' }
+CIGSDL3Scripts >> forwardingMethodHeaderFor: each [
+
+	^ each key numArgs = 1
+		ifTrue: [ each value ]
+		ifFalse: [
+			String streamContents: [ :stream |
+				each value keywords with: each key argumentNames allButFirst
+					do: [ :a :b | stream << a; space; << b; space ] ] ]
+]
+
+{ #category : 'converting' }
+CIGSDL3Scripts >> forwardingMethodMessageSendFor: each [
+
+	^ String streamContents: [ :stream |
+		each key selector keywords with: ({ 'self' }, each key argumentNames allButFirst)
+			do: [ :a :b | stream << a; space; << b; space ] ]
+]
+
 { #category : 'initialization' }
 CIGSDL3Scripts >> forwardingSelectorFor: method [
 	
@@ -110,29 +135,19 @@ CIGSDL3Scripts >> generateForwardingAPI [
 	" == Generate forwarding API == "
 
 	methodsAndForwardingSelectors do: [ :each |
-		| header messageSend sourceCode |
+		| sourceCode |
 "		self
 			assert: [ each key argumentNames first = theWord ]
 			description: 'In SDL3 we can do this assumption on first argument'."
 "		each key argumentNames first = theWord ifFalse: [ {self. each} inspect ]."
 
-		header := each key numArgs = 1
-			ifTrue: [ each value ]
-			ifFalse: [
-				String streamContents: [ :stream |
-					each value keywords with: each key argumentNames allButFirst
-						do: [ :a :b | stream << a; space; << b; space ] ] ].
-
-		messageSend := String streamContents: [ :stream |
-			each key selector keywords with: ({ 'self' }, each key argumentNames allButFirst)
-				do: [ :a :b | stream << a; space; << b; space ] ].
 		sourceCode := '{1}
 			
 			^ self ffiLibrary {2}' format: {
-			header.
-			messageSend
+			self forwardingMethodHeaderFor: each.
+			self forwardingMethodMessageSendFor: each.
 			}.
-		(targetClass >> (targetClass compile: sourceCode classified: #'*SDL3-API')) reformat ]
+		(targetClass >> (targetClass compile: sourceCode classified: self forwardingMethodCategory)) reformat ]
 ]
 
 { #category : 'initialization' }
