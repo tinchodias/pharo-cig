@@ -16,5 +16,6 @@ CIGSDL3AudioStreamScripts >> initializeParameters [
 	theWord := 'stream'.
 	excludedSelectors := #().
 	explicitRenames := {
+		#device -> #deviceID
 		} asOrderedDictionary
 ]
