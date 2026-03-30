@@ -32,5 +32,6 @@ CIGSDL3AudioDeviceScripts >> initializeParameters [
 	theWord := 'devid'.
 	excludedSelectors := #().
 	explicitRenames := {
+		#audioDevicePaused -> #isPaused
 		} asOrderedDictionary
 ]
