@@ -173,3 +173,15 @@ CIGSDL3PreSteps class >> step3DeleteClasses [
 
 	(self environment at: #SDL3DELETEConstants) removeFromSystem
 ]
+
+{ #category : 'steps' }
+CIGSDL3PreSteps class >> step4DeleteConstantsMethods [
+
+	SharedPool allSubclasses
+		select: [ :each | each name matchesRegex: 'SDL3.*Constants' ]
+		thenDo: [ :eachConstantsClass |
+			(eachConstantsClass classSide methodsInProtocol: #'accessing - constants')
+				do: [ :eachMethod |
+					('Remove ', eachMethod name) traceCr.
+					eachMethod removeFromSystem ] ]
+]

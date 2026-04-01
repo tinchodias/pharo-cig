@@ -126,18 +126,6 @@ CIGSDL3PostSteps class >> step3Structs [
 ]
 
 { #category : 'steps' }
-CIGSDL3PostSteps class >> step3bConstants [
-
-	SharedPool allSubclasses
-		select: [ :each | each name matchesRegex: 'SDL3.*Constants' ]
-		thenDo: [ :eachConstantsClass |
-			(eachConstantsClass classSide methodsInProtocol: #'accessing - constants')
-				do: [ :eachMethod |
-					('Remove ', eachMethod name) traceCr.
-					eachMethod removeFromSystem ] ]
-]
-
-{ #category : 'steps' }
 CIGSDL3PostSteps class >> step4aSDL3MappedEvent [
 
 	| eventClass evts |
