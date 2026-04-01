@@ -181,7 +181,7 @@ CIGSDL3PostSteps class >> step4cSDL3MouseEvent [
 "	self environment at: #SDL3MouseEvent ifPresent: #removeFromSystem."
 	self assert: (self environment includesKey: #SDL3MouseEvent) not.
 	eventClass :=
-		(SDL3MappedEvent << #SDL3MouseEvent
+		((self environment at: #SDL3WindowIDEvent) << #SDL3MouseEvent
 			slots: {};
 			tag: 'Own';
 			package: 'SDL3') install.
