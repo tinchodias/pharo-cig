@@ -242,7 +242,7 @@ CIGSDL3Scripts >> phase1: method [
 		keywords := { newFirstKeyword }, tail ].
 
 	" -- *set* -- "
-	wordsInFirstKeyword first = 'set' ifTrue: [
+	(wordsInFirstKeyword first = 'set' and: [ wordsInFirstKeyword size > 1 ]) ifTrue: [
 		newFirstKeyword := '' join: ({ wordsInFirstKeyword second uncapitalized }, (wordsInFirstKeyword allButFirst: 2)).
 		keywords := { newFirstKeyword }, keywords allButFirst ].
 
