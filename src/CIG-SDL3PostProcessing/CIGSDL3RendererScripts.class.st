@@ -20,6 +20,7 @@ CIGSDL3RendererScripts >> initializeParameters [
 		'newTextureWithPropertiesProps:' -> 'newTextureWithProperties:'.
 		'renderCoordinatesFromWindowX:windowY:x:y:' -> 'convertRenderCoordinatesFromWindowX:windowY:intoX:y:'.
 		'renderCoordinatesToWindowX:y:windowX:windowY:' -> 'convertRenderCoordinatesToWindowX:y:intoWindowX:windowY:'.
-		'getRenderScaleIntoX:scaleY:' -> 'getScaleIntoX:y:'
+		'getRenderScaleIntoX:scaleY:' -> 'getScaleIntoX:y:'.
+		#renderDrawBlendModeBlendMode: -> #renderDrawBlendMode:
 		} asOrderedDictionary 
 ]
