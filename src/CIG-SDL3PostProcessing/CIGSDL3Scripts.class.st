@@ -118,14 +118,9 @@ CIGSDL3Scripts >> forwardingMethodMessageSendFor: each [
 CIGSDL3Scripts >> forwardingSelectorFor: method [
 	
 	| keywords newSelector |
-"	(method selector = #getGPUDeviceProperties:) ifTrue: [ 1halt ]."
-
 	keywords := self phase1: method.
 	newSelector := self phase2: keywords.
 	newSelector := self phase3: newSelector.
-
-"	newSelector = #gpuProperties ifTrue: [ 1halt ]."
-
 
 	^ newSelector
 ]
@@ -256,7 +251,7 @@ CIGSDL3Scripts >> phase2: input [
 	| keywords newFirstKeyword wordsInFirstKeyword |
 	keywords := input.
 
-	newFirstKeyword := keywords first.
+	newFirstKeyword := keywords first uncapitalized.
 	wordsInFirstKeyword := self camelCasedWordsOf: newFirstKeyword.
 
 	"May merge first and second keywords"
