@@ -16,7 +16,7 @@ CIGSDL3WindowScripts >> initializeParameters [
 	excludedSelectors := #().
 	explicitRenames := {
 		'textInputActive' -> 'isTextInputActive'.
-		'displayFor' -> 'display'.
+		'displayFor' -> 'displayID'.
 		'iD' -> 'id'.
 		'fullscreenMode' -> 'isFullscreenMode'.
 		'keyboardGrab' -> 'isKeyboardGrabbed'.
