@@ -317,6 +317,34 @@ CIGSDL3PostSteps class >> step4zEventVisitor [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step4zzEventVisitorTrait [
+
+	| eventClass |
+	eventClass :=
+		(Trait << #TSDL3HierarchicalEventVisitor
+			tag: 'Events';
+			package: 'SDL3') install.
+	eventClass comment: 'I am a trait providing a double-dispatch mechanism for visiting `SDL3MappedEvent` objects.
+I implement a ''bubbling'' delegation pattern: specific visit methods (e.g., #visitMouseButtonDownEvent:) delegate to more general ones (e.g., #visitMouseButtonEvent:), eventually terminating in a no-op at #visitMappedEvent:.
+
+Users should compose me into any class that needs to process SDL3 events. This allows subclasses to selectively override only the specific events they care about, while high-level or unhandled events automatically fall back to the next level of generality.'.
+
+	SDL3MappedEvent allSubclassesDo: [ :each |
+		eventClass
+			compile: ('visit{1}: anEvent
+
+	^ self visit{2}: anEvent'
+				format: {
+					each name withoutPrefix: 'SDL3'.
+					each superclass name withoutPrefix: 'SDL3' })
+			classified: 'visiting - ', (each hasSubclasses ifTrue: [ 'abstract' ] ifFalse: [ 'concrete' ] ) ].
+
+	eventClass
+		compile: 'visitMappedEvent: aVisitor'
+		classified: 'visiting - root'
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step4zzzEventsTag [
 
 	"Set package tag of other existing classes"
