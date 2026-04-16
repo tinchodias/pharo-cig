@@ -13,12 +13,14 @@ CIGSDL3WindowScripts >> initializeParameters [
 	firstKeywordSubstringsToRemove := #('Window').
 	targetClass := self class environment classNamed: #SDL3Window.
 	theWord := 'window'.
-	excludedSelectors := #().
+	excludedSelectors := #(
+		getWindowDisplayScale:
+		getWindowPixelDensity:
+		). "Both are manually customized in SDL3-Own"
 	explicitRenames := {
 		'textInputActive' -> 'isTextInputActive'.
 		'displayFor' -> 'displayID'.
 		'iD' -> 'id'.
-		'fullscreenMode' -> 'isFullscreenMode'.
 		'keyboardGrab' -> 'isKeyboardGrabbed'.
 		'mouseGrab' -> 'isMouseGrabbed'.
 		'flashOperation:' -> 'flashWithOperation:'.
