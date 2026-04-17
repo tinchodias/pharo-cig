@@ -21,6 +21,7 @@ CIGSDL3WindowScripts >> initializeParameters [
 		'textInputActive' -> 'isTextInputActive'.
 		'displayFor' -> 'displayID'.
 		'iD' -> 'id'.
+		'fullscreenMode' -> 'isFullscreenMode'.
 		'keyboardGrab' -> 'isKeyboardGrabbed'.
 		'mouseGrab' -> 'isMouseGrabbed'.
 		'flashOperation:' -> 'flashWithOperation:'.
@@ -29,6 +30,7 @@ CIGSDL3WindowScripts >> initializeParameters [
 		'glCreateContext' -> 'glNewContext'.
 		'screenKeyboardShown' -> 'isScreenKeyboardShown'.
 		'newRendererName:' -> 'newRendererFor:'.
-		'fillDocumentFill:' -> 'fillDocumentSpace:'
+		'fillDocumentFill:' -> 'fillDocumentSpace:'.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]
