@@ -185,3 +185,14 @@ CIGSDL3PreSteps class >> step4DeleteConstantsMethods [
 					('Remove ', eachMethod name) traceCr.
 					eachMethod removeFromSystem ] ]
 ]
+
+{ #category : 'steps' }
+CIGSDL3PreSteps class >> step5TagEnumsAndConstants [
+
+	(self environment at: #SDL3Enumeration) withAllSubclasses
+		select: [ :each | (each packageName = #'SDL3') and: [ each packageTagName = 'Base' ] ]
+		thenDo: [ :each | each packageTag: #Enumerations ].
+	SharedPool withAllSubclasses
+		select: [ :each | each packageName = #'SDL3' and: [ each name endsWith: 'Constants' ] ]
+		thenDo: [ :each | each packageTag: #Constants ].
+]
