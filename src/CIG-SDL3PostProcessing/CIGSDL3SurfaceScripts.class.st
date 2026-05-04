@@ -8,6 +8,7 @@ Class {
 
 { #category : 'initialization' }
 CIGSDL3SurfaceScripts >> initializeParameters [
+	<script: 'self new generateForwardingAPI'>
 
 	targetArgument := #(#SDL_Surface #*).
 	firstKeywordSubstringsToRemove := #('Surface').
@@ -18,6 +19,7 @@ CIGSDL3SurfaceScripts >> initializeParameters [
 		'flipSurface:Flip:' -> 'flip:'.
 		'rLEEnabled:' -> 'isRLEEnabled:'.
 		'convertAndColorspaceFormat:palette:colorspace:props:' -> 'copyWithFormat:palette:colorspace:props:'.
-		'convertFormat:' -> 'copyWithFormat:'
+		'convertFormat:' -> 'copyWithFormat:'.
+		#'cleaR:g:b:a:' -> #'clearR:g:b:a:'
 		} asOrderedDictionary
 ]
