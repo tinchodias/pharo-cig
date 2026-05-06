@@ -386,6 +386,17 @@ CIGSDL3PostSteps class >> step7DeleteUnneededStructAPI [
 ]
 
 { #category : 'steps' }
+CIGSDL3PostSteps class >> step8CreateAllEnumerations [
+
+	| class |
+	class := (SharedPool << #SDL3AllEnumerations
+		sharedPools: SDL3Enumeration allSubclasses;
+		tag: 'Enumerations';
+		package: 'SDL3') install.
+	class comment: 'I am a shared pool that gathers all SDL3 enumerations, which eases their usage.'
+]
+
+{ #category : 'steps' }
 CIGSDL3PostSteps class >> step99AddGitRepo [
 
 	| remote repository |
