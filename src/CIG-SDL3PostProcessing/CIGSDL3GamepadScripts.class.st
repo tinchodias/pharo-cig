@@ -19,5 +19,6 @@ CIGSDL3GamepadScripts >> initializeParameters [
 		#iD -> #id.
 		#lEDGamepadRed:green:blue: -> #ledRed:green:blue:.
 		#numTouchpads -> #numberOfTouchpads.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

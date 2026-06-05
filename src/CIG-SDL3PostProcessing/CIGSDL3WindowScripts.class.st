@@ -21,7 +21,6 @@ CIGSDL3WindowScripts >> initializeParameters [
 		'textInputActive' -> 'isTextInputActive'.
 		'displayFor' -> 'displayID'.
 		'iD' -> 'id'.
-		'fullscreenMode' -> 'isFullscreenMode'.
 		'keyboardGrab' -> 'isKeyboardGrabbed'.
 		'mouseGrab' -> 'isMouseGrabbed'.
 		'flashOperation:' -> 'flashWithOperation:'.

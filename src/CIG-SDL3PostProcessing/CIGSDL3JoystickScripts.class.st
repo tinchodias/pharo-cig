@@ -19,5 +19,6 @@ CIGSDL3JoystickScripts >> initializeParameters [
 		#gUID -> #guid.
 		#iD -> #id.
 		#lEDJoystickRed:green:blue: -> #ledRed:green:blue:.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

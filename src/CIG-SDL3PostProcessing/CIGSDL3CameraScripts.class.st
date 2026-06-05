@@ -16,6 +16,7 @@ CIGSDL3CameraScripts >> initializeParameters [
 	theWord := 'camera'.
 	excludedSelectors := #().
 	explicitRenames := {
-		#iD -> #id
+		#iD -> #id.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

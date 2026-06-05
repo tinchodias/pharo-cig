@@ -16,6 +16,7 @@ CIGSDL3SensorScripts >> initializeParameters [
 	theWord := 'sensor'.
 	excludedSelectors := #().
 	explicitRenames := {
-		#iD -> #id
+		#iD -> #id.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

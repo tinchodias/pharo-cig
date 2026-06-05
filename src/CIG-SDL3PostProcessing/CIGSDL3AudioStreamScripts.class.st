@@ -17,7 +17,7 @@ CIGSDL3AudioStreamScripts >> initializeParameters [
 	excludedSelectors := #().
 	explicitRenames := {
 		#device -> #deviceID.
-		#audioDevicePaused -> #isDevicePaused
-
+		#audioDevicePaused -> #isDevicePaused.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

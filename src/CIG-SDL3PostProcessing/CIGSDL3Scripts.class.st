@@ -107,10 +107,29 @@ CIGSDL3Scripts >> forwardingMethodHeaderFor: each [
 ]
 
 { #category : 'converting' }
+CIGSDL3Scripts >> forwardingMethodHeaderFor: each argumentNames: argumentNames [
+
+	^ argumentNames
+		ifEmpty: [ each value ]
+		ifNotEmpty: [
+			String streamContents: [ :stream |
+				each value keywords with: argumentNames
+					do: [ :a :b | stream << a; space; << b; space ] ] ]
+]
+
+{ #category : 'converting' }
 CIGSDL3Scripts >> forwardingMethodMessageSendFor: each [
 
 	^ String streamContents: [ :stream |
 		each key selector keywords with: ({ 'self' }, each key argumentNames allButFirst)
+			do: [ :a :b | stream << a; space; << b; space ] ]
+]
+
+{ #category : 'converting' }
+CIGSDL3Scripts >> forwardingMethodMessageSendFor: each argumentNames: argumentNames [
+
+	^ String streamContents: [ :stream |
+		each key selector keywords with: ({ 'self' }, argumentNames)
 			do: [ :a :b | stream << a; space; << b; space ] ]
 ]
 
@@ -130,17 +149,17 @@ CIGSDL3Scripts >> generateForwardingAPI [
 	" == Generate forwarding API == "
 
 	methodsAndForwardingSelectors do: [ :each |
-		| sourceCode |
-"		self
-			assert: [ each key argumentNames first = theWord ]
-			description: 'In SDL3 we can do this assumption on first argument'."
-"		each key argumentNames first = theWord ifFalse: [ {self. each} inspect ]."
-
-		sourceCode := '{1}
-			
-			^ self ffiLibrary {2}' format: {
-			self forwardingMethodHeaderFor: each.
-			self forwardingMethodMessageSendFor: each.
+		| argumentNames sourceCode |
+		argumentNames := each key argumentNames allButFirst collect: [:arg |
+			|camelCaseName|
+			camelCaseName := arg.
+			camelCaseName := String streamContents: [ :stringStream |
+			($_ split: camelCaseName) do: [ :part |
+				stringStream << part asLowercase asCamelCase ] ].
+			camelCaseName := camelCaseName uncapitalized ].
+		sourceCode := (self templateFor: each key sourceCode) format: {
+			self forwardingMethodHeaderFor: each argumentNames: argumentNames.
+			self forwardingMethodMessageSendFor: each argumentNames: argumentNames.
 			}.
 		(targetClass >> (targetClass compile: sourceCode classified: self forwardingMethodCategory)) reformat ]
 ]
@@ -291,4 +310,36 @@ CIGSDL3Scripts >> phase3: input [
 			newSelector := value ].
 
 	^ newSelector
+]
+
+{ #category : 'converting' }
+CIGSDL3Scripts >> templateFor: sourceCode [
+
+	| template |
+	template := '{1}
+			
+	^ self ffiLibrary {2}'.
+
+
+	(sourceCode includesSubstring: '#(void SDL_')
+		ifTrue: [ ^ template := '{1}
+			
+	self ffiLibrary {2}' ].
+
+
+	(sourceCode matchesRegex: '.*returns.*NULL.*#\(SDL_.*')
+		ifTrue: [ ^ template := '{1}
+			
+	^ (self ffiLibrary {2})
+		assertNotNullReturn;
+		yourself' ].
+
+
+	((sourceCode beginsWith: 'is') not and: [ sourceCode includesSubstring: '#(bool SDL_' ])
+		ifTrue: [ ^ template := '{1}
+			
+	self ffiLibrary assertSuccess:
+		(self ffiLibrary {2})' ].
+
+	^ template
 ]

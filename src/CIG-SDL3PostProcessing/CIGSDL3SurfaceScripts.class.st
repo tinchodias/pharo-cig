@@ -20,6 +20,7 @@ CIGSDL3SurfaceScripts >> initializeParameters [
 		'rLEEnabled:' -> 'isRLEEnabled:'.
 		'convertAndColorspaceFormat:palette:colorspace:props:' -> 'copyWithFormat:palette:colorspace:props:'.
 		'convertFormat:' -> 'copyWithFormat:'.
-		#'cleaR:g:b:a:' -> #'clearR:g:b:a:'
+		#'cleaR:g:b:a:' -> #'clearR:g:b:a:'.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

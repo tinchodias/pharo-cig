@@ -8,6 +8,7 @@ Class {
 
 { #category : 'initialization' }
 CIGSDL3TextureScripts >> initializeParameters [
+	<script: 'self new generateForwardingAPI'>
 
 	targetArgument := #(#SDL_Texture #*).
 	firstKeywordSubstringsToRemove := #('Texture').
@@ -16,6 +17,7 @@ CIGSDL3TextureScripts >> initializeParameters [
 	excludedSelectors := #().
 	explicitRenames := {
 		'rendererFrom' -> 'renderer'.
-		'scaleModeScaleMode:' -> 'scaleMode:'
+		'scaleModeScaleMode:' -> 'scaleMode:'.
+		#properties -> #propertiesID.
 		} asOrderedDictionary
 ]

@@ -17,5 +17,7 @@ CIGSDL3GPUComputePassScripts >> initializeParameters [
 	targetClass := self class environment classNamed: #SDL3GPUComputePass.
 	theWord := 'compute_pass'.
 	excludedSelectors := #().
-	explicitRenames := {} asOrderedDictionary
+	explicitRenames := {
+		#dispatchGPUComputeGroupcountX:groupcountY:groupcountZ: -> #dispatchWorkgroupCountX:y:z:
+		} asOrderedDictionary
 ]
